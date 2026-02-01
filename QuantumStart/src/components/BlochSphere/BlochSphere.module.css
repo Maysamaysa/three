@@ -1,0 +1,65 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--qs-surface, #f5f5f5);
+  border-radius: 8px;
+  border: 1px solid var(--qs-border, #ddd);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.qubitSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.qubitLabel {
+  font-size: 0.8rem;
+  color: var(--qs-muted, #666);
+}
+
+.qubitBtn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--qs-border, #ccc);
+  border-radius: 4px;
+  background: var(--qs-bg, #fff);
+  cursor: pointer;
+}
+
+.qubitBtn[data-selected] {
+  background: var(--qs-primary, #1976d2);
+  border-color: var(--qs-primary, #1976d2);
+  color: #fff;
+}
+
+.qubitBtn:hover:not([data-selected]) {
+  background: var(--qs-surface-hover, #eee);
+}
+
+.mixedNote {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--qs-muted, #666);
+}
+
+.canvasWrap {
+  width: 100%;
+  height: 280px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fafafa;
+}

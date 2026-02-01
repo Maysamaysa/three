@@ -1,0 +1,132 @@
+.grid {
+  display: flex;
+  align-items: stretch;
+  min-height: 120px;
+  background: var(--qs-bg, #fff);
+  border: 1px solid var(--qs-border, #ddd);
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.wireLabels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 0.5rem 0.25rem;
+  background: var(--qs-surface, #f8f8f8);
+  border-right: 1px solid var(--qs-border, #ddd);
+}
+
+.wireLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--qs-muted, #666);
+}
+
+.strip {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem;
+  gap: 2px;
+}
+
+.gateColumn {
+  display: contents;
+}
+
+.gateColumn > * {
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.gateColumn[data-dragging] {
+  opacity: 0.5;
+}
+
+.cell {
+  border-radius: 4px;
+  background: var(--qs-wire-bg, #fafafa);
+}
+
+.wireSegment {
+  width: 100%;
+  height: 2px;
+  background: var(--qs-wire, #ccc);
+  margin: 0 4px;
+}
+
+.gateBox {
+  position: relative;
+  padding: 0.35rem 0.5rem;
+  background: var(--qs-gate-bg, #e3f2fd);
+  border: 1px solid var(--qs-gate-border, #90caf9);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.gateBox[data-two-qubit] {
+  min-height: 2rem;
+}
+
+.gateLabel {
+  display: block;
+}
+
+.gateSub {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--qs-muted, #666);
+}
+
+.controlDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--qs-gate-border, #1976d2);
+  margin: 0 auto;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  padding: 0 4px;
+  font-size: 1rem;
+  line-height: 1;
+  border: none;
+  background: transparent;
+  color: var(--qs-muted, #888);
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.removeBtn:hover {
+  color: var(--qs-danger, #c62828);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dropZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  padding: 0.5rem;
+  border: 2px dashed var(--qs-border, #ccc);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--qs-muted, #888);
+  background: var(--qs-drop-bg, #fafafa);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dropZone[data-over] {
+  border-color: var(--qs-primary, #1976d2);
+  background: var(--qs-drop-over, #e3f2fd);
+  color: var(--qs-primary, #1976d2);
+}

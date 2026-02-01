@@ -1,0 +1,58 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--qs-surface, #f5f5f5);
+  border-radius: 8px;
+  border: 1px solid var(--qs-border, #ddd);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--qs-border, #ccc);
+  border-radius: 6px;
+  background: var(--qs-bg, #fff);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--qs-surface-hover, #eee);
+  border-color: var(--qs-primary, #1976d2);
+  color: var(--qs-primary, #1976d2);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stepInfo {
+  font-size: 0.85rem;
+  color: var(--qs-muted, #666);
+  min-width: 6rem;
+  text-align: center;
+}
+
+.resetBtn {
+  align-self: flex-start;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  border: none;
+  background: transparent;
+  color: var(--qs-muted, #666);
+  cursor: pointer;
+}
+
+.resetBtn:hover {
+  color: var(--qs-danger, #c62828);
+}

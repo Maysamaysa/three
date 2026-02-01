@@ -1,0 +1,56 @@
+.palette {
+  padding: 0.75rem;
+  background: var(--qs-surface, #f5f5f5);
+  border-radius: 8px;
+  border: 1px solid var(--qs-border, #ddd);
+}
+
+.title {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.section {
+  margin-bottom: 0.75rem;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--qs-muted, #666);
+  margin-bottom: 0.35rem;
+}
+
+.gateList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.gateButton {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--qs-border, #ccc);
+  border-radius: 6px;
+  background: var(--qs-bg, #fff);
+  cursor: grab;
+  transition: box-shadow 0.15s, opacity 0.15s;
+}
+
+.gateButton:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.gateButton:active {
+  cursor: grabbing;
+}
+
+.gateButton[data-dragging] {
+  opacity: 0.6;
+}

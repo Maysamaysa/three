@@ -1,0 +1,79 @@
+.wrapper {
+  padding: 0.75rem;
+  background: var(--qs-surface, #f5f5f5);
+  border-radius: 8px;
+  border: 1px solid var(--qs-border, #ddd);
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.ket {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: var(--qs-bg, #fff);
+  border-radius: 4px;
+  border: 1px solid var(--qs-border, #eee);
+  overflow-x: auto;
+}
+
+.ket code {
+  font-size: 0.85rem;
+  font-family: ui-monospace, monospace;
+}
+
+.probs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.probsLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--qs-muted, #666);
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.basisLabel {
+  min-width: 3rem;
+  font-family: ui-monospace, monospace;
+  color: var(--qs-muted, #666);
+}
+
+.barTrack {
+  flex: 1;
+  height: 1rem;
+  background: var(--qs-bg, #eee);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: var(--qs-primary, #1976d2);
+  border-radius: 4px;
+  transition: width 0.2s;
+}
+
+.barPct {
+  min-width: 3rem;
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--qs-muted, #666);
+}
