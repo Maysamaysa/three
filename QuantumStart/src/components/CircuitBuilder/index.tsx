@@ -27,12 +27,15 @@ export interface CircuitBuilderProps {
   circuit: UseCircuitReturn;
 }
 
-function parseGateType(type: string): Gate | null {
+function parseGateType(type: string, targetQubit: number, qubitCount: number): Gate | null {
   if (['H', 'X', 'Y', 'Z', 'S', 'T'].includes(type)) {
-    return singleQubitGate(type as SingleQubitGateType, 0);
+    return singleQubitGate(type as SingleQubitGateType, targetQubit);
   }
   if (type === 'CNOT' || type === 'CZ') {
-    return twoQubitGate(type as TwoQubitGateType, 0, 1);
+    // For two-qubit gates, use targetQubit as target and adjacent qubit as control
+    // If targetQubit is last, use previous qubit as control; otherwise use next qubit
+    const control = targetQubit === qubitCount - 1 ? targetQubit - 1 : targetQubit + 1;
+    return twoQubitGate(type as TwoQubitGateType, control, targetQubit);
   }
   return null;
 }
@@ -49,6 +52,10 @@ export function CircuitBuilder({ circuit }: CircuitBuilderProps) {
   } = circuit;
 
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [pendingTwoQubitGate, setPendingTwoQubitGate] = useState<{
+    type: TwoQubitGateType;
+    target: number;
+  } | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -69,9 +76,23 @@ export function CircuitBuilder({ circuit }: CircuitBuilderProps) {
 
       if (activeId.startsWith('palette-')) {
         const gateType = activeId.replace('palette-', '');
-        if (overId === 'circuit-append') {
-          const gate = parseGateType(gateType);
-          if (gate) addGate(gate);
+        // Check if dropped on a qubit-specific drop zone
+        if (overId.startsWith('circuit-append-q')) {
+          const qubitIndex = over.data.current?.qubit;
+          if (typeof qubitIndex === 'number') {
+            // Check if it's a two-qubit gate
+            if (gateType === 'CNOT' || gateType === 'CZ') {
+              // Enter control selection mode
+              setPendingTwoQubitGate({
+                type: gateType as TwoQubitGateType,
+                target: qubitIndex,
+              });
+            } else {
+              // Single-qubit gate: add immediately
+              const gate = parseGateType(gateType, qubitIndex, qubitCount);
+              if (gate) addGate(gate);
+            }
+          }
         }
         return;
       }
@@ -79,7 +100,7 @@ export function CircuitBuilder({ circuit }: CircuitBuilderProps) {
       if (activeId.startsWith('circuit-')) {
         const fromIndex = parseInt(activeId.replace('circuit-', ''), 10);
         if (Number.isNaN(fromIndex)) return;
-        if (overId === 'circuit-append') {
+        if (overId.startsWith('circuit-append')) {
           moveGate(fromIndex, gates.length - 1);
           return;
         }
@@ -91,8 +112,30 @@ export function CircuitBuilder({ circuit }: CircuitBuilderProps) {
         }
       }
     },
-    [addGate, moveGate, gates.length]
+    [addGate, moveGate, gates.length, qubitCount]
   );
+
+  const handleControlSelection = useCallback(
+    (controlQubit: number) => {
+      if (!pendingTwoQubitGate) return;
+
+      // Don't allow control and target to be the same
+      if (controlQubit === pendingTwoQubitGate.target) return;
+
+      const gate = twoQubitGate(
+        pendingTwoQubitGate.type,
+        controlQubit,
+        pendingTwoQubitGate.target
+      );
+      addGate(gate);
+      setPendingTwoQubitGate(null);
+    },
+    [pendingTwoQubitGate, addGate]
+  );
+
+  const cancelControlSelection = useCallback(() => {
+    setPendingTwoQubitGate(null);
+  }, []);
 
   const sortableIds = gates.map((_, i) => `circuit-${i}`);
 
@@ -135,6 +178,9 @@ export function CircuitBuilder({ circuit }: CircuitBuilderProps) {
               circuit={gates}
               qubitCount={qubitCount}
               onRemoveGate={removeGate}
+              pendingTwoQubitGate={pendingTwoQubitGate}
+              onControlSelection={handleControlSelection}
+              onCancelSelection={cancelControlSelection}
             />
           </SortableContext>
           <DragOverlay>

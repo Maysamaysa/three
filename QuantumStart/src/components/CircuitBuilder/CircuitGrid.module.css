@@ -1,4 +1,5 @@
 .grid {
+  position: relative;
   display: flex;
   align-items: stretch;
   min-height: 120px;
@@ -35,7 +36,7 @@
   display: contents;
 }
 
-.gateColumn > * {
+.gateColumn>* {
   min-height: 2rem;
   display: flex;
   align-items: center;
@@ -131,4 +132,63 @@
   border-color: var(--qs-primary, #1976d2);
   background: var(--qs-drop-over, #e3f2fd);
   color: var(--qs-primary, #1976d2);
+}
+
+.selectionPrompt {
+  grid-column: 2;
+  /* Place in the circuit area, not over labels */
+  grid-row: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--qs-primary, #1976d2);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 10;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.selectionPrompt button {
+  padding: 0.25rem 0.75rem;
+  background: white;
+  color: var(--qs-primary, #1976d2);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.selectionPrompt button:hover {
+  opacity: 0.8;
+}
+
+.wireLabel[data-selectable] {
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: background 0.2s, transform 0.1s;
+  user-select: none;
+}
+
+.wireLabel[data-selectable]:not([data-disabled]) {
+  background: var(--qs-primary-light, #e3f2fd);
+  border: 2px solid var(--qs-primary, #1976d2);
+}
+
+.wireLabel[data-selectable]:not([data-disabled]):hover {
+  background: var(--qs-primary, #1976d2);
+  color: white;
+  transform: scale(1.05);
+}
+
+.wireLabel[data-selectable][data-disabled] {
+  background: var(--qs-disabled, #f5f5f5);
+  color: var(--qs-muted, #999);
+  border: 2px solid var(--qs-border, #ddd);
+  opacity: 0.6;
 }

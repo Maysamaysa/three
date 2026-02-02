@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { Gate } from '../../lib/circuit/types';
+import type { Gate, TwoQubitGateType } from '../../lib/circuit/types';
 import { isTwoQubitGate } from '../../lib/circuit/types';
 import styles from './CircuitGrid.module.css';
 
@@ -121,23 +121,56 @@ export interface CircuitGridProps {
   circuit: readonly Gate[];
   qubitCount: number;
   onRemoveGate: (index: number) => void;
+  pendingTwoQubitGate?: { type: TwoQubitGateType; target: number } | null;
+  onControlSelection?: (controlQubit: number) => void;
+  onCancelSelection?: () => void;
+}
+
+// Individual drop zone for each qubit row
+function QubitDropZone({ qubitIndex, columnIndex }: { qubitIndex: number; columnIndex: number }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: `circuit-append-q${qubitIndex}`,
+    data: { type: 'append', qubit: qubitIndex },
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={styles.dropZone}
+      style={{ gridColumn: columnIndex, gridRow: qubitIndex + 1 }}
+      data-over={isOver || undefined}
+    >
+      {qubitIndex === 0 && 'Drop gate here'}
+    </div>
+  );
 }
 
 export function CircuitGrid({
   circuit,
   qubitCount,
   onRemoveGate,
+  pendingTwoQubitGate,
+  onControlSelection,
+  onCancelSelection,
 }: CircuitGridProps) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: 'circuit-append',
-    data: { type: 'append' },
-  });
-
   return (
     <div className={styles.grid}>
       <div className={styles.wireLabels}>
         {Array.from({ length: qubitCount }, (_, q) => (
-          <div key={q} className={styles.wireLabel}>
+          <div
+            key={q}
+            className={styles.wireLabel}
+            data-selectable={pendingTwoQubitGate ? 'true' : undefined}
+            data-disabled={pendingTwoQubitGate?.target === q ? 'true' : undefined}
+            onClick={() => {
+              if (pendingTwoQubitGate && pendingTwoQubitGate.target !== q && onControlSelection) {
+                onControlSelection(q);
+              }
+            }}
+            style={{
+              cursor: pendingTwoQubitGate && pendingTwoQubitGate.target !== q ? 'pointer' : undefined,
+            }}
+          >
             q{q}
           </div>
         ))}
@@ -149,6 +182,16 @@ export function CircuitGrid({
           gridTemplateRows: `repeat(${qubitCount}, 1fr)`,
         }}
       >
+        {pendingTwoQubitGate && (
+          <div className={styles.selectionPrompt}>
+            <span>
+              Select control qubit for {pendingTwoQubitGate.type} (target: q{pendingTwoQubitGate.target})
+            </span>
+            <button type="button" onClick={onCancelSelection}>
+              Cancel
+            </button>
+          </div>
+        )}
         {circuit.map((gate, i) => (
           <SortableGateColumn
             key={`${i}-${gate.type}-${(gate.controls ?? []).join('-')}-${gate.targets.join('-')}`}
@@ -158,14 +201,10 @@ export function CircuitGrid({
             onRemove={() => onRemoveGate(i)}
           />
         ))}
-        <div
-          ref={setNodeRef}
-          className={styles.dropZone}
-          style={{ gridColumn: circuit.length + 1, gridRow: `1 / -1` }}
-          data-over={isOver || undefined}
-        >
-          Drop gate here
-        </div>
+        {/* Create drop zones for each qubit row */}
+        {!pendingTwoQubitGate && Array.from({ length: qubitCount }, (_, q) => (
+          <QubitDropZone key={q} qubitIndex={q} columnIndex={circuit.length + 1} />
+        ))}
       </div>
     </div>
   );
