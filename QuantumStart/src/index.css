@@ -1,11 +1,29 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Outfit', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
-  color: #ffffff;
-  background-color: transparent;
+  /* Quantum Lotus Palette */
+  --bg-lily: #F8F9FF;
+  --bg-space: #1A1B26;
+  --state-0: #5DA7DB;
+  /* Blue */
+  --state-1: #A67B5B;
+  /* Amber */
+  --accent-pink: #FFB7C5;
+  /* Lotus Pink */
+  --glass-green: #C1E1C1;
+
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(193, 225, 193, 0.3);
+  --glass-blur: blur(10px);
+
+  --radius-lg: 32px;
+  --radius-md: 16px;
+
+  color-scheme: light dark;
+  color: var(--bg-space);
+  background-color: var(--bg-lily);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,14 +31,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #1976d2;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #1565c0;
+[data-theme='dark'] {
+  --glass-bg: rgba(26, 27, 38, 0.6);
+  color: var(--bg-lily);
+  background-color: var(--bg-space);
 }
 
 html,
@@ -31,13 +45,15 @@ body,
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 body {
   min-width: 320px;
-  color: #ffffff;
-  background-color: #000000;
+  background-color: var(--bg-lily);
+  transition: background-color 0.5s ease;
 }
+
 
 h1 {
   font-size: 3.2em;

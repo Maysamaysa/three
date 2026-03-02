@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import Black_cat from '../assets/black_cat.glb'
+import Squidmodel from '../assets/squid.glb'
 
-function BlackCat() {
+function Squid() {
     const group = useRef<THREE.Group>(null)
-    const { scene, animations } = useGLTF(Black_cat)
+    const { scene, animations } = useGLTF(Squidmodel)
     const { actions, mixer } = useAnimations(animations, group)
 
     // Use refs to store mouse position (persists across renders)
@@ -44,8 +44,8 @@ function BlackCat() {
         }
 
         // Smoothly interpolate target position
-        target.current.x = (mouseX.current) - 1000
-        target.current.y = -mouseY.current - 300
+        target.current.x = (mouseX.current) + 1000
+        target.current.y = -mouseY.current
         target.current.z = 1000
 
         // Make the cat look at the target
@@ -53,13 +53,13 @@ function BlackCat() {
     })
 
     return (
-        <group ref={group} position={[4, -1, 0]}>
+        <group ref={group} position={[0, 0, 0]}>
             <primitive
                 object={scene}
-                scale={3}
+                scale={1}
             />
         </group>
     )
 }
 
-export default BlackCat
+export default Squid

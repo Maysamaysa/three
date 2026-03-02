@@ -1,53 +1,52 @@
 .wrapper {
-  padding: 0.75rem;
-  background: var(--qs-surface, #f5f5f5);
-  border-radius: 8px;
-  border: 1px solid var(--qs-border, #ddd);
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
-  max-height: 500px;
-  /* Limit total height */
+  max-height: 600px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .title {
   margin: 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--state-0);
 }
 
 .ket {
-  margin-bottom: 0.75rem;
-  padding: 0.5rem;
-  background: var(--qs-bg, #fff);
-  border-radius: 4px;
-  border: 1px solid var(--qs-border, #eee);
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
   overflow-x: auto;
   flex-shrink: 0;
-  /* Don't shrink ket notation */
 }
 
 .ket code {
-  font-size: 0.85rem;
-  font-family: ui-monospace, monospace;
-  color: #1a1a1a;
+  font-size: 1rem;
+  font-family: 'Outfit', ui-monospace, monospace;
+  color: var(--bg-space);
+  font-weight: 600;
 }
 
 .probs {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.75rem;
   min-height: 0;
-  /* Allow flex shrinking */
   flex: 1;
-  /* Take remaining space */
 }
 
 .probsHeader {
@@ -56,81 +55,80 @@
   justify-content: space-between;
   gap: 0.5rem;
   flex-shrink: 0;
-  /* Don't shrink header */
 }
 
 .probsLabel {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--qs-muted, #666);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--bg-space);
+  opacity: 0.6;
 }
 
 .sortBtn {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  background: var(--qs-bg, #fff);
-  border: 1px solid var(--qs-border, #ccc);
-  border-radius: 4px;
-  color: var(--qs-primary, #1976d2);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: white;
+  border: 1px solid var(--state-0);
+  border-radius: var(--radius-md);
+  color: var(--state-0);
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .sortBtn:hover {
-  background: var(--qs-primary-light, #e3f2fd);
-  border-color: var(--qs-primary, #1976d2);
+  background: var(--state-0);
+  color: white;
 }
 
 .barsContainer {
   overflow-y: auto;
-  /* Scrollable when content exceeds height */
   flex: 1;
-  /* Take remaining space */
   min-height: 0;
-  /* Required for flex scrolling */
-  padding-right: 0.25rem;
-  /* Space for scrollbar */
+  padding-right: 0.5rem;
 }
 
 .bars {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 
 .barRow {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: #1a1a1a;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--bg-space);
+  font-weight: 500;
 }
 
 .basisLabel {
-  min-width: 3rem;
+  min-width: 3.5rem;
   font-family: ui-monospace, monospace;
-  color: var(--qs-muted, #666);
+  color: var(--state-1);
 }
 
 .barTrack {
   flex: 1;
-  height: 1rem;
-  background: var(--qs-bg, #eee);
-  border-radius: 4px;
+  height: 1.25rem;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
   overflow: hidden;
 }
 
 .barFill {
   height: 100%;
-  background: var(--qs-primary, #1976d2);
-  border-radius: 4px;
-  transition: width 0.2s;
+  background: linear-gradient(to right, var(--state-0), var(--accent-pink));
+  border-radius: 6px;
+  transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .barPct {
-  min-width: 3rem;
+  min-width: 3.5rem;
   text-align: right;
-  font-size: 0.75rem;
-  color: var(--qs-muted, #666);
+  font-size: 0.85rem;
+  color: var(--bg-space);
+  opacity: 0.6;
+  font-weight: 700;
 }

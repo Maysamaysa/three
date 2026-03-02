@@ -11,11 +11,12 @@ function SphereAndAxes() {
     <>
       <mesh>
         <sphereGeometry args={[RADIUS, 32, 24]} />
-        <meshBasicMaterial
-          color="#e3f2fd"
+        <meshPhongMaterial
+          color="#C1E1C1"
           wireframe
           transparent
-          opacity={0.6}
+          opacity={0.4}
+          shininess={100}
         />
       </mesh>
       <axesHelper args={[RADIUS * 1.1]} />
@@ -41,18 +42,19 @@ function BlochArrow({ x, y, z, length }: { x: number; y: number; z: number; leng
       {cylinderHeight > 0.01 && (
         <mesh position={[0, cylinderHeight / 2, 0]}>
           <cylinderGeometry args={[cylinderRad, cylinderRad, cylinderHeight, 16]} />
-          <meshBasicMaterial color="#1565c0" />
+          <meshPhongMaterial color="#FFB7C5" />
         </mesh>
       )}
       {arrowLength > 0.1 && (
         <mesh position={[0, arrowLength, 0]}>
           <coneGeometry args={[coneRad, coneHeight, 16]} />
-          <meshBasicMaterial color="#1565c0" />
+          <meshPhongMaterial color="#FFB7C5" />
         </mesh>
       )}
     </group>
   );
 }
+
 
 function Scene({
   state,
@@ -120,6 +122,8 @@ export function BlochSphere({
           camera={{ position: [2.5, 2, 2.5], fov: 45 }}
           gl={{ antialias: true }}
         >
+          <ambientLight intensity={1.5} />
+          <pointLight position={[5, 5, 5]} intensity={1} color="#FFB7C5" />
           <Scene
             state={state}
             nQubits={nQubits}
@@ -127,6 +131,7 @@ export function BlochSphere({
           />
           <OrbitControls enableDamping dampingFactor={0.05} />
         </Canvas>
+
       </div>
     </div>
   );

@@ -1,11 +1,32 @@
 import { useNavigate } from 'react-router-dom';
+import { Canvas } from '@react-three/fiber';
+import { Suspense } from 'react';
 import styles from './Learn.module.css';
+import ProceduralBackground from '../models/procedural-background';
+import KoiCat from '../models/koi_cat';
 
 export function Learn() {
     const navigate = useNavigate();
 
     return (
         <div className={styles.container}>
+            <Canvas
+                className={styles.canvas}
+                camera={{ position: [5, 2, 10], fov: 45 }}
+                gl={{ antialias: true, alpha: true }}
+            >
+                <Suspense fallback={null}>
+                    <ambientLight intensity={1.5} />
+                    <directionalLight position={[5, 5, 5]} intensity={2} />
+                    <pointLight position={[-5, 3, -5]} intensity={1} color="#5DA7DB" />
+
+                    <ProceduralBackground />
+                    <group position={[3, -1, 0]} rotation={[0, -0.5, 0]}>
+                        <KoiCat />
+                    </group>
+                </Suspense>
+            </Canvas>
+
             <div className={styles.header}>
                 <button
                     type="button"

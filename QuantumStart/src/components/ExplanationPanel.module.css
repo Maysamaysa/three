@@ -1,19 +1,21 @@
 .wrapper {
-  padding: 0.75rem;
-  background: var(--qs-surface, #f5f5f5);
-  border-radius: 8px;
-  border: 1px solid var(--qs-border, #ddd);
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .title {
-  margin: 0 0 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--state-1);
 }
 
 .section {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
 .section:last-child {
@@ -22,15 +24,16 @@
 
 .label {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--qs-muted, #666);
-  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--bg-space);
+  opacity: 0.6;
+  margin-bottom: 0.4rem;
 }
 
 .text {
   margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--qs-text, #333);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--bg-space);
 }

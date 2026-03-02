@@ -2,34 +2,37 @@
   position: relative;
   display: flex;
   align-items: stretch;
-  min-height: 120px;
-  background: var(--qs-bg, #fff);
-  border: 1px solid var(--qs-border, #ddd);
-  border-radius: 8px;
+  min-height: 150px;
+  background: white;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   overflow: auto;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
 .wireLabels {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  padding: 0.5rem 0.25rem;
-  background: var(--qs-surface, #f8f8f8);
-  border-right: 1px solid var(--qs-border, #ddd);
+  padding: 1rem 0.5rem;
+  background: var(--bg-lily);
+  border-right: 1px solid var(--glass-border);
+  min-width: 60px;
 }
 
 .wireLabel {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--qs-muted, #666);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--state-0);
+  text-align: center;
 }
 
 .strip {
   display: grid;
   flex: 1;
   min-width: 0;
-  padding: 0.5rem;
-  gap: 2px;
+  padding: 1rem;
+  gap: 8px;
 }
 
 .gateColumn {
@@ -37,11 +40,11 @@
 }
 
 .gateColumn>* {
-  min-height: 2rem;
+  min-height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
 }
 
 .gateColumn[data-dragging] {
@@ -49,146 +52,169 @@
 }
 
 .cell {
-  border-radius: 4px;
-  background: var(--qs-wire-bg, #fafafa);
+  border-radius: var(--radius-md);
+  background: rgba(248, 249, 255, 0.5);
 }
 
 .wireSegment {
   width: 100%;
-  height: 2px;
-  background: var(--qs-wire, #ccc);
-  margin: 0 4px;
+  height: 3px;
+  background: linear-gradient(to right, var(--state-0), var(--accent-pink));
+  opacity: 0.2;
+  margin: 0 8px;
 }
 
 .gateBox {
   position: relative;
-  padding: 0.35rem 0.5rem;
-  background: var(--qs-gate-bg, #e3f2fd);
-  border: 1px solid var(--qs-gate-border, #90caf9);
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  padding: 0.6rem 1rem;
+  background: white;
+  border: 2px solid var(--state-0);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--state-0);
+  box-shadow: 0 4px 10px rgba(93, 167, 219, 0.15);
+  transition: all 0.2s ease;
+}
+
+.gateBox:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(93, 167, 219, 0.25);
 }
 
 .gateBox[data-two-qubit] {
-  min-height: 2rem;
+  min-height: 3rem;
+  border-color: var(--accent-pink);
+  color: var(--accent-pink);
 }
 
 .gateLabel {
   display: block;
-  color: #1a1a1a;
 }
 
 .gateSub {
   display: block;
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: var(--qs-muted, #666);
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.7;
 }
 
 .controlDot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: var(--qs-gate-border, #1976d2);
+  background: var(--accent-pink);
   margin: 0 auto;
+  box-shadow: 0 0 10px var(--accent-pink);
 }
 
 .removeBtn {
   position: absolute;
-  top: 2px;
-  right: 4px;
-  padding: 0 4px;
-  font-size: 1rem;
-  line-height: 1;
-  border: none;
-  background: transparent;
-  color: var(--qs-muted, #888);
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  background: var(--bg-lily);
+  border: 1px solid var(--glass-border);
+  color: var(--state-1);
   cursor: pointer;
-  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.gateBox:hover .removeBtn {
+  opacity: 1;
 }
 
 .removeBtn:hover {
-  color: var(--qs-danger, #c62828);
-  background: rgba(0, 0, 0, 0.05);
+  background: #ff4d4d;
+  color: white;
+  border-color: #ff4d4d;
 }
 
 .dropZone {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 100px;
-  padding: 0.5rem;
-  border: 2px dashed var(--qs-border, #ccc);
-  border-radius: 6px;
-  font-size: 0.8rem;
-  color: #555;
-  background: var(--qs-drop-bg, #fafafa);
-  transition: border-color 0.15s, background 0.15s;
+  min-width: 120px;
+  padding: 1rem;
+  border: 2px dashed var(--glass-green);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--glass-green);
+  background: rgba(193, 225, 193, 0.05);
+  transition: all 0.3s ease;
 }
 
 .dropZone[data-over] {
-  border-color: var(--qs-primary, #1976d2);
-  background: var(--qs-drop-over, #e3f2fd);
-  color: var(--qs-primary, #1976d2);
+  border-color: var(--state-0);
+  background: rgba(93, 167, 219, 0.1);
+  color: var(--state-0);
 }
 
 .selectionPrompt {
   grid-column: 2;
-  /* Place in the circuit area, not over labels */
   grid-row: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background: var(--qs-primary, #1976d2);
+  padding: 2rem;
+  background: var(--state-0);
   color: white;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  border-radius: var(--radius-lg);
+  font-size: 1.1rem;
+  font-weight: 700;
   z-index: 10;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-direction: column;
+  box-shadow: 0 20px 50px rgba(93, 167, 219, 0.4);
 }
 
 .selectionPrompt button {
-  padding: 0.25rem 0.75rem;
+  padding: 0.6rem 1.5rem;
   background: white;
-  color: var(--qs-primary, #1976d2);
+  color: var(--state-0);
   border: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
 .selectionPrompt button:hover {
-  opacity: 0.8;
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
 
 .wireLabel[data-selectable] {
-  padding: 0.4rem 0.6rem;
-  border-radius: 4px;
-  transition: background 0.2s, transform 0.1s;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
   user-select: none;
 }
 
 .wireLabel[data-selectable]:not([data-disabled]) {
-  background: var(--qs-primary-light, #e3f2fd);
-  border: 2px solid var(--qs-primary, #1976d2);
+  background: var(--bg-lily);
+  border: 2px solid var(--accent-pink);
+  color: var(--accent-pink);
 }
 
 .wireLabel[data-selectable]:not([data-disabled]):hover {
-  background: var(--qs-primary, #1976d2);
+  background: var(--accent-pink);
   color: white;
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .wireLabel[data-selectable][data-disabled] {
-  background: var(--qs-disabled, #f5f5f5);
-  color: var(--qs-muted, #999);
-  border: 2px solid var(--qs-border, #ddd);
-  opacity: 0.6;
+  background: #eee;
+  color: #bbb;
+  border: 2px solid #ddd;
+  opacity: 0.5;
 }

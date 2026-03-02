@@ -1,21 +1,64 @@
 import { useNavigate } from 'react-router-dom';
+import { useState, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
 import styles from './Landing.module.css';
 import ProceduralBackground from '../models/procedural-background';
-import BackgroundLanding from '../models/background-landing';
-import Cat from '../models/cat';
-import BlackCat from '../models/black_cat';
 import KoiCat from '../models/koi_cat';
+
+// Custom Typewriter Hook
+function useTypewriter(text: string, speed = 30, active = true) {
+    const [displayedText, setDisplayedText] = useState("");
+    const [isFinished, setIsFinished] = useState(false);
+
+    useEffect(() => {
+        if (!active) return;
+        setDisplayedText("");
+        setIsFinished(false);
+        let i = 0;
+        const timer = setInterval(() => {
+            if (i < text.length) {
+                setDisplayedText((prev) => prev + text.charAt(i));
+                i++;
+            } else {
+                clearInterval(timer);
+                setIsFinished(true);
+            }
+        }, speed);
+        return () => clearInterval(timer);
+    }, [text, speed, active]);
+
+    return { displayedText, isFinished };
+}
 
 export function Landing() {
     const navigate = useNavigate();
+    const [showDialogue, setShowDialogue] = useState(false);
+    const [hoveredChoice, setHoveredChoice] = useState<'A' | 'B' | null>(null);
+    const [dialoguePhase, setDialoguePhase] = useState(1);
+
+    const phase1Text = "*Yawn*... Oh! An Observer? You caught me in a state of deep superposition. Or maybe just a fuzzy nap... both are equally valid until you clicked!";
+    const phase2Text = "I'm Qubit, your guide to the weird, the tiny, and the 'both-at-once.' We call it Quantum, and it’s the secret language of the universe. Want to learn how to break the 'on or off' rules of your boring old computer?";
+
+    const { displayedText: currentText, isFinished: textFinished } = useTypewriter(
+        dialoguePhase === 1 ? phase1Text : phase2Text,
+        40, // Slightly slower for better readability and stability
+        showDialogue
+    );
+
+    const handleAnimationComplete = () => {
+        setShowDialogue(true);
+    };
+
+    const nextPhase = () => {
+        setDialoguePhase(2);
+        setHoveredChoice(null);
+    };
 
     return (
         <section className={styles.container}>
             <Canvas
                 className={styles.canvas}
-                camera={{ position: [0, 2, 8], fov: 60 }}
+                camera={{ position: [0, 0, 6], fov: 50 }}
                 gl={{
                     antialias: true,
                     alpha: true,
@@ -25,74 +68,82 @@ export function Landing() {
             >
                 <Suspense fallback={null}>
                     {/* Lighting for the cat */}
-                    <ambientLight intensity={0.8} />
-                    <directionalLight position={[5, 5, 5]} intensity={1.5} castShadow />
-                    <pointLight position={[-5, 3, -5]} intensity={0.8} color="#8b5cf6" />
-                    <pointLight position={[5, 3, 5]} intensity={0.6} color="#6366f1" />
+                    <ambientLight intensity={1} />
+                    <directionalLight position={[5, 5, 5]} intensity={2} castShadow />
+                    <pointLight
+                        position={[-5, 3, -5]}
+                        intensity={hoveredChoice === 'A' ? 3 : 1}
+                        color="#5DA7DB"
+                    />
+                    <pointLight
+                        position={[5, 3, 5]}
+                        intensity={hoveredChoice === 'B' ? 3 : 0.8}
+                        color="#A67B5B"
+                    />
 
-                    {/* Background */}
                     <ProceduralBackground />
-                    {/* <BackgroundLanding /> */}
-                    <BlackCat />
-                    <KoiCat />
+                    <KoiCat onAnimationComplete={handleAnimationComplete} />
 
-                    {/* Your cat! */}
-                    {/* <Cat /> */}
                 </Suspense>
             </Canvas>
 
-            {/* <div className={styles.hero}>
-                <h1 className={styles.title}>
-                    Quantum<span className={styles.highlight}>Start</span>
-                </h1>
-                <p className={styles.subtitle}>
-                    Your journey into the quantum realm begins here
-                </p>
-                <p className={styles.description}>
-                    Explore quantum computing through interactive 3D visualizations,
-                    hands-on circuit building, and step-by-step tutorials.
-                </p>
+            {showDialogue && (
+                <div className={styles.dialogueOverlay}>
+                    <div className={styles.speechBubble}>
+                        <p className={styles.qubitName}>Qubit:</p>
+                        <p className={styles.dialogueText}>
+                            {currentText}
+                            {textFinished && dialoguePhase === 1 && <span className={styles.cursor}>_</span>}
+                        </p>
+                    </div>
 
-                <div className={styles.buttons}>
-                    <button
-                        type="button"
-                        className={styles.primaryBtn}
-                        onClick={() => navigate('/learn')}
-                    >
-                        Let's Get Started
-                    </button>
-
-                    <button
-                        type="button"
-                        className={styles.secondaryBtn}
-                        onClick={() => navigate('/playground')}
-                    >
-                        Go to Playground
-                    </button>
+                    {textFinished && (
+                        <div className={styles.choices}>
+                            {dialoguePhase === 1 ? (
+                                <>
+                                    <button
+                                        className={`${styles.choiceBtn} ${styles.blueChoice} ${styles.smallChoice}`}
+                                        onMouseEnter={() => setHoveredChoice('A')}
+                                        onMouseLeave={() => setHoveredChoice(null)}
+                                        onClick={nextPhase}
+                                    >
+                                        Okay?
+                                    </button>
+                                    <button
+                                        className={`${styles.choiceBtn} ${styles.amberChoice} ${styles.smallChoice}`}
+                                        onMouseEnter={() => setHoveredChoice('B')}
+                                        onMouseLeave={() => setHoveredChoice(null)}
+                                        onClick={nextPhase}
+                                    >
+                                        A cat?
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        className={`${styles.choiceBtn} ${styles.blueChoice}`}
+                                        onMouseEnter={() => setHoveredChoice('A')}
+                                        onMouseLeave={() => setHoveredChoice(null)}
+                                        onClick={() => navigate('/learn')}
+                                    >
+                                        <span className={styles.choiceEye}>👁️</span>
+                                        Teach me the secret language!
+                                    </button>
+                                    <button
+                                        className={`${styles.choiceBtn} ${styles.amberChoice}`}
+                                        onMouseEnter={() => setHoveredChoice('B')}
+                                        onMouseLeave={() => setHoveredChoice(null)}
+                                        onClick={() => navigate('/playground')}
+                                    >
+                                        <span className={styles.choiceEye}>👁️</span>
+                                        Does being a liquid feel like a bath?
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    )}
                 </div>
-
-                <p className={styles.hint}>
-                    Already familiar with quantum? Jump straight to the playground →
-                </p>
-            </div>
-
-            <div className={styles.features}>
-                <div className={styles.feature}>
-                    <div className={styles.featureIcon}>📚</div>
-                    <h3>Learn Theory</h3>
-                    <p>Understand quantum principles with 3D visualizations</p>
-                </div>
-                <div className={styles.feature}>
-                    <div className={styles.featureIcon}>🎮</div>
-                    <h3>Build Circuits</h3>
-                    <p>Drag and drop gates to create quantum algorithms</p>
-                </div>
-                <div className={styles.feature}>
-                    <div className={styles.featureIcon}>🔬</div>
-                    <h3>Experiment</h3>
-                    <p>See real-time quantum state evolution</p>
-                </div>
-            </div> */}
+            )}
         </section >
     );
 }
