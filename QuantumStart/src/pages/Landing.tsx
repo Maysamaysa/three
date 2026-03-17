@@ -1,94 +1,68 @@
-import { useNavigate } from 'react-router-dom';
-import { useState, Suspense, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
-import styles from './Landing.module.css';
-import ProceduralBackground from '../models/procedural-background';
-import KoiCat from '../models/koi_cat';
+import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useCat } from '../context/CatContext'
+import styles from './Landing.module.css'
 
-// Custom Typewriter Hook
-function useTypewriter(text: string, speed = 30, active = true) {
-    const [displayedText, setDisplayedText] = useState("");
-    const [isFinished, setIsFinished] = useState(false);
-
+// ─── TYPEWRITER HOOK ──────────────────────────────────────────────────────────
+function useTypewriter(text: string, speed = 35, active = true) {
+    const [displayedText, setDisplayedText] = useState('')
+    const [isFinished, setIsFinished] = useState(false)
     useEffect(() => {
-        if (!active) return;
-        setDisplayedText("");
-        setIsFinished(false);
-        let i = 0;
+        if (!active) return
+        setDisplayedText('')
+        setIsFinished(false)
+        let i = 0
         const timer = setInterval(() => {
-            if (i < text.length) {
-                setDisplayedText((prev) => prev + text.charAt(i));
-                i++;
-            } else {
-                clearInterval(timer);
-                setIsFinished(true);
-            }
-        }, speed);
-        return () => clearInterval(timer);
-    }, [text, speed, active]);
-
-    return { displayedText, isFinished };
+            if (i < text.length) { setDisplayedText(prev => prev + text.charAt(i)); i++ }
+            else { clearInterval(timer); setIsFinished(true) }
+        }, speed)
+        return () => clearInterval(timer)
+    }, [text, speed, active])
+    return { displayedText, isFinished }
 }
 
+// ─── LANDING PAGE ─────────────────────────────────────────────────────────────
 export function Landing() {
-    const navigate = useNavigate();
-    const [showDialogue, setShowDialogue] = useState(false);
-    const [hoveredChoice, setHoveredChoice] = useState<'A' | 'B' | null>(null);
-    const [dialoguePhase, setDialoguePhase] = useState(1);
+    const navigate = useNavigate()
+    const { setMode, setCatPosition, setQubitState, isAwake } = useCat()
 
-    const phase1Text = "*Yawn*... Oh! An Observer? You caught me in a state of deep superposition. Or maybe just a fuzzy nap... both are equally valid until you clicked!";
-    const phase2Text = "I'm Qubit, your guide to the weird, the tiny, and the 'both-at-once.' We call it Quantum, and it’s the secret language of the universe. Want to learn how to break the 'on or off' rules of your boring old computer?";
+    const [hoveredChoice, setHoveredChoice] = useState<'A' | 'B' | null>(null)
+    const [dialoguePhase, setDialoguePhase] = useState(1)
+
+    // On mount: configure cat for hero mode, centered
+    useEffect(() => {
+        setMode('hero')
+        setCatPosition('center')
+        setQubitState('idle')
+    }, [setMode, setCatPosition, setQubitState])
+
+    const phase1Text = "*Yawn*... Oh! An Observer? You caught me in a state of deep superposition. Or maybe just a fuzzy nap... both are equally valid until you clicked!"
+    const phase2Text = "I'm Qubit, your guide to the weird, the tiny, and the 'both-at-once.' We call it Quantum, and it's the secret language of the universe. Want to learn how to break the 'on or off' rules of your boring old computer?"
 
     const { displayedText: currentText, isFinished: textFinished } = useTypewriter(
         dialoguePhase === 1 ? phase1Text : phase2Text,
-        40, // Slightly slower for better readability and stability
-        showDialogue
-    );
+        40,
+        isAwake  // typewriter only runs after cat wakes up
+    )
 
-    const handleAnimationComplete = () => {
-        setShowDialogue(true);
-    };
+    const nextPhase = () => { setDialoguePhase(2); setHoveredChoice(null) }
 
-    const nextPhase = () => {
-        setDialoguePhase(2);
-        setHoveredChoice(null);
-    };
+    const handleTrackSelect = (track: 'blue' | 'amber', route: string) => {
+        setQubitState(track)
+        setCatPosition('corner')
+        setMode('npc')
+        // Small delay so the cat starts animating before the page switches
+        setTimeout(() => navigate(route), 350)
+    }
 
     return (
-        <section className={styles.container}>
-            <Canvas
-                className={styles.canvas}
-                camera={{ position: [0, 0, 6], fov: 50 }}
-                gl={{
-                    antialias: true,
-                    alpha: true,
-                    powerPreference: 'high-performance'
-                }}
-                dpr={[1, 2]}
-            >
-                <Suspense fallback={null}>
-                    {/* Lighting for the cat */}
-                    <ambientLight intensity={1} />
-                    <directionalLight position={[5, 5, 5]} intensity={2} castShadow />
-                    <pointLight
-                        position={[-5, 3, -5]}
-                        intensity={hoveredChoice === 'A' ? 3 : 1}
-                        color="#5DA7DB"
-                    />
-                    <pointLight
-                        position={[5, 3, 5]}
-                        intensity={hoveredChoice === 'B' ? 3 : 0.8}
-                        color="#A67B5B"
-                    />
-
-                    <ProceduralBackground />
-                    <KoiCat onAnimationComplete={handleAnimationComplete} />
-
-                </Suspense>
-            </Canvas>
-
-            {showDialogue && (
-                <div className={styles.dialogueOverlay}>
+        <section
+            className={styles.container}
+            style={{ background: 'transparent', pointerEvents: 'none' }}
+        >
+            {/* All interactive elements need pointer-events: auto */}
+            {isAwake && (
+                <div className={styles.dialogueOverlay} style={{ pointerEvents: 'auto' }}>
                     <div className={styles.speechBubble}>
                         <p className={styles.qubitName}>Qubit:</p>
                         <p className={styles.dialogueText}>
@@ -124,7 +98,7 @@ export function Landing() {
                                         className={`${styles.choiceBtn} ${styles.blueChoice}`}
                                         onMouseEnter={() => setHoveredChoice('A')}
                                         onMouseLeave={() => setHoveredChoice(null)}
-                                        onClick={() => navigate('/learn')}
+                                        onClick={() => handleTrackSelect('blue', '/learn')}
                                     >
                                         <span className={styles.choiceEye}>👁️</span>
                                         Teach me the secret language!
@@ -133,10 +107,10 @@ export function Landing() {
                                         className={`${styles.choiceBtn} ${styles.amberChoice}`}
                                         onMouseEnter={() => setHoveredChoice('B')}
                                         onMouseLeave={() => setHoveredChoice(null)}
-                                        onClick={() => navigate('/playground')}
+                                        onClick={() => handleTrackSelect('amber', '/playground')}
                                     >
                                         <span className={styles.choiceEye}>👁️</span>
-                                        Does being a liquid feel like a bath?
+                                        I'm here to play!
                                     </button>
                                 </>
                             )}
@@ -144,6 +118,17 @@ export function Landing() {
                     )}
                 </div>
             )}
-        </section >
-    );
+
+            {/* Subtle hover effect on background lights driven by choice hover */}
+            <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                background: hoveredChoice === 'A'
+                    ? 'radial-gradient(ellipse at 30% 60%, rgba(93,167,219,0.06) 0%, transparent 70%)'
+                    : hoveredChoice === 'B'
+                        ? 'radial-gradient(ellipse at 70% 60%, rgba(196,149,90,0.06) 0%, transparent 70%)'
+                        : 'transparent',
+                transition: 'background 0.4s ease',
+            }} />
+        </section>
+    )
 }

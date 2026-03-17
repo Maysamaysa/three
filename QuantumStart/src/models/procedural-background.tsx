@@ -76,7 +76,8 @@ export function GradientSphere() {
                 fragmentShader={fragmentShader}
                 side={THREE.BackSide}
                 transparent
-                opacity={0.8}
+                opacity={0.55}
+                depthWrite={false}
             />
         </mesh>
     )

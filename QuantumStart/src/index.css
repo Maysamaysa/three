@@ -50,7 +50,7 @@ body,
 
 body {
   min-width: 320px;
-  background-color: var(--bg-lily);
+  background-color: var(--bg-space);
   transition: background-color 0.5s ease;
 }
 

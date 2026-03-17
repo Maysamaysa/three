@@ -1,0 +1,545 @@
+/* ─── MODULE 1 OVERLAY STYLES ─────────────────────────────────────────────── */
+
+/* Base panel — glassmorphic card floating over canvas */
+.panel {
+    position: absolute;
+    z-index: 20;
+    background: rgba(14, 15, 26, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 183, 197, 0.22);
+    border-radius: 22px;
+    padding: 24px 28px;
+    box-shadow:
+        0 16px 56px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.32s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.panelVisible {
+    opacity: 1;
+    transform: translateY(0px);
+    pointer-events: auto;
+}
+
+/* ─── TRACK SELECTOR ──────────────────────────────────────────────────────── */
+.trackSelector {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(24px);
+    width: min(420px, calc(100vw - 48px));
+    text-align: center;
+}
+
+.trackSelector.panelVisible {
+    transform: translate(-50%, -50%) translateY(0px);
+}
+
+.trackTitle {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(248, 249, 255, 0.55);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.trackHeadline {
+    font-size: 22px;
+    font-weight: 800;
+    color: #F8F9FF;
+    font-family: 'DM Sans', sans-serif;
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+.trackBtnRow {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.trackBtn {
+    flex: 1;
+    max-width: 180px;
+    background: rgba(248, 249, 255, 0.06);
+    border: 1px solid rgba(248, 249, 255, 0.12);
+    border-radius: 14px;
+    color: rgba(248, 249, 255, 0.6);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    letter-spacing: 0.01em;
+}
+
+.trackBtnBlue:hover,
+.trackBtnBlue.trackActive {
+    background: rgba(93, 167, 219, 0.18);
+    border-color: rgba(93, 167, 219, 0.6);
+    color: #7ec8f0;
+    box-shadow: 0 0 20px rgba(93, 167, 219, 0.25);
+    transform: translateY(-2px);
+}
+
+.trackBtnAmber:hover,
+.trackBtnAmber.trackActive {
+    background: rgba(196, 149, 90, 0.18);
+    border-color: rgba(196, 149, 90, 0.6);
+    color: #e0b87a;
+    box-shadow: 0 0 20px rgba(196, 149, 90, 0.25);
+    transform: translateY(-2px);
+}
+
+.eyeIcon {
+    font-size: 18px;
+}
+
+/* ─── CAT DIALOGUE BUBBLE ─────────────────────────────────────────────────── */
+.catDialogue {
+    bottom: 200px;
+    left: 50%;
+    transform: translateX(-50%) translateY(24px);
+    width: min(420px, calc(100vw - 48px));
+    border-color: rgba(93, 167, 219, 0.3);
+}
+
+.catDialogue.panelVisible {
+    transform: translateX(-50%) translateY(0px);
+}
+
+.catDialogue.amberTrack {
+    border-color: rgba(196, 149, 90, 0.3);
+}
+
+.catLabel {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: #FFB7C5;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
+}
+
+.catText {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(248, 249, 255, 0.9);
+    font-weight: 400;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* ─── LESSON PANEL ────────────────────────────────────────────────────────── */
+.lessonPanel {
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(24px);
+    width: min(560px, calc(100vw - 48px));
+}
+
+.lessonPanel.panelVisible {
+    transform: translateX(-50%) translateY(0px);
+}
+
+.lessonHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.lessonStep {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: rgba(248, 249, 255, 0.35);
+    letter-spacing: 0.08em;
+}
+
+.lessonTrackBadge {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    border: 1px solid;
+    border-radius: 99px;
+    padding: 3px 10px;
+    letter-spacing: 0.04em;
+    margin-left: auto;
+}
+
+.blueBadge {
+    color: #5DA7DB;
+    border-color: #5DA7DB;
+}
+
+.amberBadge {
+    color: #C4955A;
+    border-color: #C4955A;
+}
+
+.lessonText {
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(248, 249, 255, 0.92);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.lessonMath {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: #e0b87a;
+    background: rgba(196, 149, 90, 0.1);
+    border: 1px solid rgba(196, 149, 90, 0.2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0 18px;
+    display: block;
+    letter-spacing: 0.02em;
+}
+
+.lessonNav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navDots {
+    display: flex;
+    gap: 6px;
+}
+
+.navDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(248, 249, 255, 0.18);
+    transition: background 0.2s;
+}
+
+.navDotActive {
+    background: rgba(255, 183, 197, 0.65);
+}
+
+.nextBtn {
+    background: linear-gradient(135deg, rgba(255, 183, 197, 0.2), rgba(93, 167, 219, 0.12));
+    border: 1px solid rgba(255, 183, 197, 0.42);
+    border-radius: 12px;
+    color: #F8F9FF;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    letter-spacing: 0.01em;
+}
+
+.nextBtn:hover {
+    background: linear-gradient(135deg, rgba(255, 183, 197, 0.35), rgba(93, 167, 219, 0.22));
+    border-color: rgba(255, 183, 197, 0.65);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(255, 183, 197, 0.2);
+}
+
+/* ─── QUIZ PANEL ──────────────────────────────────────────────────────────── */
+.quizPanel {
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-24px);
+    width: min(540px, calc(100vw - 48px));
+    border-color: rgba(93, 167, 219, 0.22);
+}
+
+.quizPanel.panelVisible {
+    transform: translateX(-50%) translateY(0px);
+}
+
+.quizLabel {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: rgba(248, 249, 255, 0.35);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.quizQuestion {
+    font-size: 17px;
+    font-weight: 700;
+    color: #F8F9FF;
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.4;
+    margin-bottom: 18px;
+}
+
+.quizOptions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.quizOption {
+    background: rgba(248, 249, 255, 0.05);
+    border: 1px solid rgba(248, 249, 255, 0.1);
+    border-radius: 11px;
+    color: rgba(248, 249, 255, 0.7);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 11px 14px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: left;
+    line-height: 1.4;
+}
+
+.quizOption:hover {
+    background: rgba(248, 249, 255, 0.1);
+    color: #F8F9FF;
+    border-color: rgba(248, 249, 255, 0.25);
+}
+
+.quizOptionCorrect {
+    background: rgba(58, 200, 120, 0.18);
+    border-color: rgba(58, 200, 120, 0.6);
+    color: #7fffb0;
+}
+
+.quizOptionWrong {
+    background: rgba(255, 80, 80, 0.15);
+    border-color: rgba(255, 80, 80, 0.5);
+    color: rgba(248, 249, 255, 0.4);
+}
+
+.quizFeedback {
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: rgba(248, 249, 255, 0.75);
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-top: 8px;
+    line-height: 1.6;
+}
+
+.feedbackCorrect {
+    background: rgba(58, 200, 120, 0.12);
+    border: 1px solid rgba(58, 200, 120, 0.3);
+    color: #9fffca;
+}
+
+.feedbackWrong {
+    background: rgba(93, 167, 219, 0.1);
+    border: 1px solid rgba(93, 167, 219, 0.3);
+    color: #b0d8f5;
+}
+
+.retriesLeft {
+    font-size: 11px;
+    color: rgba(248, 249, 255, 0.35);
+    font-family: 'Space Mono', monospace;
+    margin-top: 6px;
+    text-align: right;
+}
+
+.explanationBox {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(255, 183, 197, 0.08);
+    border: 1px solid rgba(255, 183, 197, 0.22);
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgba(248, 249, 255, 0.82);
+    font-family: 'DM Sans', sans-serif;
+}
+
+.nextQuizBtn {
+    margin-top: 14px;
+    background: rgba(93, 167, 219, 0.2);
+    border: 1px solid rgba(93, 167, 219, 0.45);
+    border-radius: 11px;
+    color: #7ec8f0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+}
+
+.nextQuizBtn:hover {
+    background: rgba(93, 167, 219, 0.35);
+    transform: translateY(-1px);
+}
+
+.clickHint {
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255, 183, 197, 0.65);
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 8px;
+    line-height: 1.55;
+}
+
+/* ─── COMPLETION PANEL ────────────────────────────────────────────────────── */
+.completionPanel {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(24px);
+    width: min(420px, calc(100vw - 48px));
+    text-align: center;
+    border-color: rgba(255, 183, 197, 0.35);
+}
+
+.completionPanel.panelVisible {
+    transform: translate(-50%, -50%) translateY(0px);
+}
+
+.badgeGlow {
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 24px rgba(255, 183, 197, 0.6));
+    animation: badgePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 24px rgba(255, 183, 197, 0.6));
+    }
+
+    50% {
+        filter: drop-shadow(0 0 40px rgba(255, 183, 197, 0.9));
+    }
+}
+
+.badgeName {
+    font-size: 20px;
+    font-weight: 800;
+    color: #F8F9FF;
+    font-family: 'DM Sans', sans-serif;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+}
+
+.badgeSubtitle {
+    font-size: 13px;
+    color: rgba(255, 183, 197, 0.75);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.06em;
+    margin-bottom: 22px;
+}
+
+.continueBtn {
+    background: linear-gradient(135deg, rgba(255, 183, 197, 0.28), rgba(193, 225, 193, 0.18));
+    border: 1px solid rgba(255, 183, 197, 0.55);
+    border-radius: 14px;
+    color: #F8F9FF;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 36px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 20px rgba(255, 183, 197, 0.2);
+}
+
+.continueBtn:hover {
+    background: linear-gradient(135deg, rgba(255, 183, 197, 0.45), rgba(193, 225, 193, 0.3));
+    border-color: rgba(255, 183, 197, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(255, 183, 197, 0.35);
+}
+
+/* ─── BACK BTN ────────────────────────────────────────────────────────────── */
+.backBtn {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 25;
+    background: rgba(248, 249, 255, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(248, 249, 255, 0.14);
+    border-radius: 12px;
+    color: rgba(248, 249, 255, 0.65);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+    pointer-events: auto;
+}
+
+.backBtn:hover {
+    background: rgba(248, 249, 255, 0.12);
+    color: #F8F9FF;
+    border-color: rgba(248, 249, 255, 0.25);
+    transform: translateX(-2px);
+}
+
+/* ─── PHASE INDICATOR PILL ────────────────────────────────────────────────── */
+.phasePill {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 25;
+    background: rgba(248, 249, 255, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(248, 249, 255, 0.1);
+    border-radius: 99px;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: rgba(248, 249, 255, 0.35);
+    letter-spacing: 0.06em;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.32s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.phasePillVisible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ─── CURSOR BLINK ────────────────────────────────────────────────────────── */
+.cursor {
+    display: inline-block;
+    animation: blink 0.7s step-end infinite;
+    color: #FFB7C5;
+    margin-left: 1px;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
