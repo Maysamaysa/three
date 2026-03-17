@@ -1,0 +1,267 @@
+/* BlochSphereOverlay.module.css — glassmorphic overlay styles */
+
+.panel {
+    position: absolute;
+    z-index: 10;
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 24px;
+    color: #fff;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.panelVisible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Phase Pill */
+.phasePill {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 183, 197, 0.15);
+    border: 1px solid rgba(255, 183, 197, 0.3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    color: #FFB7C5;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    z-index: 20;
+    backdrop-filter: blur(5px);
+}
+
+/* Track Selector */
+.trackSelector {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 400px;
+    text-align: center;
+}
+
+.panelVisible.trackSelector {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.trackTitle {
+    font-size: 12px;
+    color: rgba(255, 183, 197, 0.6);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.trackHeadline {
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: 300;
+}
+
+.trackBtnRow {
+    display: flex;
+    gap: 16px;
+}
+
+.trackBtn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.trackBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #FFB7C5;
+}
+
+.trackBtnBlue:hover .pathSphere { background: #5DA7DB; box-shadow: 0 0 15px #5DA7DB; }
+.trackBtnAmber:hover .pathSphere { background: #C4955A; box-shadow: 0 0 15px #C4955A; }
+
+.pathSphere {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s;
+}
+
+/* Lesson Panels */
+.lessonPanel {
+    bottom: 40px;
+    left: 40px;
+    width: 360px;
+}
+
+.lessonHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.lessonStep {
+    font-size: 11px;
+    color: rgba(255, 183, 197, 0.5);
+    font-weight: 700;
+}
+
+.lessonTrackBadge {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 5px;
+}
+
+.blueBadge { background: rgba(93, 167, 219, 0.1); color: #5DA7DB; border: 1px solid rgba(93, 167, 219, 0.2); }
+.amberBadge { background: rgba(196, 149, 90, 0.1); color: #C4955A; border: 1px solid rgba(196, 149, 90, 0.2); }
+
+.lessonText {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.lessonMath {
+    display: block;
+    background: rgba(0,0,0,0.2);
+    padding: 12px;
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: #FFB7C5;
+    margin-bottom: 20px;
+    text-align: center;
+    border-left: 3px solid #FFB7C5;
+}
+
+/* Math HUD */
+.mathHud {
+    background: rgba(255, 183, 197, 0.05);
+    border: 1px solid rgba(255, 183, 197, 0.1);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.hudTitle {
+    font-size: 10px;
+    color: rgba(255, 183, 197, 0.5);
+    margin: 0 0 8px 0;
+    font-weight: 700;
+}
+
+.hudFormula {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.val {
+    color: #FFB7C5;
+    font-weight: 700;
+}
+
+.hudAngles {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.nextBtn {
+    background: #FFB7C5;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.nextBtn:hover { transform: scale(1.05); }
+
+/* Buttons */
+.backBtn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 20;
+    pointer-events: auto;
+}
+
+.backBtn:hover { background: rgba(255,255,255,0.1); }
+
+/* Quiz Styles */
+.quizOption {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #fff;
+    padding: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.quizOption:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #FFB7C5;
+}
+
+/* Completion Panel */
+.completionPanel {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 300px;
+}
+
+.badgeGlow {
+    font-size: 64px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 15px rgba(255, 183, 197, 0.5));
+}
+
+.badgeName {
+    font-size: 24px;
+    color: #FFB7C5;
+    margin-bottom: 8px;
+}
+
+.continueBtn {
+    margin-top: 24px;
+    background: transparent;
+    border: 1px solid #FFB7C5;
+    color: #FFB7C5;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.continueBtn:hover { background: rgba(255, 183, 197, 0.1); }

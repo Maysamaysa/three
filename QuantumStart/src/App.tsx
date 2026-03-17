@@ -9,7 +9,9 @@ import { Landing } from './pages/Landing'
 import { Learn } from './pages/Learn'
 import { Playground } from './pages/Playground'
 import { TutorialChallenge } from './pages/TutorialChallenge'
-import { Module1 } from './pages/module1/Module1'
+import { QubitModule } from './pages/qubit/QubitModule'
+import { SuperpositionModule } from './pages/superposition/SuperpositionModule'
+import { BlochSphereModule } from './pages/bloch/BlochSphereModule'
 import './App.css'
 
 // ─── GLOBAL CAT CANVAS ────────────────────────────────────────────────────────
@@ -81,7 +83,9 @@ function AppShell() {
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/learn" element={<Learn />} />
-            <Route path="/learn/qubit" element={<Module1 />} />
+            <Route path="/learn/qubit" element={<QubitModule />} />
+            <Route path="/learn/superposition" element={<SuperpositionModule />} />
+            <Route path="/learn/bloch" element={<BlochSphereModule />} />
             <Route path="/playground" element={<Playground />} />
             <Route path="/tutorial/:id" element={<TutorialChallenge />} />
           </Routes>

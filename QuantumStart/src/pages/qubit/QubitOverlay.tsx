@@ -1,29 +1,14 @@
 /**
- * Module1Overlay.tsx — all HTML panels for Module 1 "What is a Qubit?"
- * (Moved to src/pages/module1/)
+ * QubitOverlay.tsx — all HTML panels for "What is a Qubit?"
+ * (Moved to src/pages/qubit/)
  */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styles from './Module1Overlay.module.css'
-import type { Track, Phase } from './Module1Scene'
+import { useTypewriter } from '../../hooks/useTypewriter'
+import styles from './QubitOverlay.module.css'
+import type { Track, Phase } from './QubitScene'
 
-// ─── TYPEWRITER ───────────────────────────────────────────────────────────────
-function useTypewriter(text: string, speed = 32, active = true) {
-    const [displayed, setDisplayed] = useState('')
-    const [finished, setFinished] = useState(false)
-    useEffect(() => {
-        if (!active || !text) return
-        setDisplayed(''); setFinished(false)
-        let i = 0
-        const t = setInterval(() => {
-            if (i < text.length) { setDisplayed(p => p + text.charAt(i)); i++ }
-            else { clearInterval(t); setFinished(true) }
-        }, speed)
-        return () => clearInterval(t)
-    }, [text, speed, active])
-    return { displayed, finished }
-}
 // ─── LESSON CONTENT ───────────────────────────────────────────────────────────
 const BLUE_PANELS = [
     { text: "A classical bit is like a coin — heads (1) or tails (0). Always one or the other.", hint: "Click the coin on the left to flip it." },
@@ -85,15 +70,15 @@ function TrackSelector({ panelsVisible, onTrackSelect }: { panelsVisible: boolea
     return (
         <div className= {`${styles.panel} ${styles.trackSelector} ${panelsVisible ? styles.panelVisible : ''}`
 }>
-    <p className={ styles.trackTitle }> Module 1 · What is a Qubit ? </p>
+    <p className={ styles.trackTitle }> What is a Qubit ? </p>
         < h2 className = { styles.trackHeadline } > Choose your learning path </h2>
             < div className = { styles.trackBtnRow } >
-                <button className={ `${styles.trackBtn} ${styles.trackBtnBlue}` } onClick = {() => onTrackSelect('blue')} id = "track-blue-btn" >
-                    <span className={ styles.eyeIcon }>🔵</span> Intuition
-                        </button>
-                        < button className = {`${styles.trackBtn} ${styles.trackBtnAmber}`} onClick = {() => onTrackSelect('amber')} id = "track-amber-btn" >
-                            <span className={ styles.eyeIcon }>🟡</span> Technical
-                                </button>
+                <button className={`${styles.trackBtn} ${styles.trackBtnBlue}`} onClick={() => onTrackSelect('blue')} id="track-blue-btn">
+                    <div className={styles.pathSphere} /> Intuition
+                </button>
+                <button className={`${styles.trackBtn} ${styles.trackBtnAmber}`} onClick={() => onTrackSelect('amber')} id="track-amber-btn">
+                    <div className={styles.pathSphere} /> Technical
+                </button>
                                 </div>
                                 </div>
     )
@@ -107,16 +92,19 @@ const TRACK_DIALOGUE: Record<'blue' | 'amber', string> = {
 
 function CatDialogueBubble({ track, panelsVisible }: { track: Track; panelsVisible: boolean }) {
     if (!track) return null
-    const { displayed, finished } = useTypewriter(TRACK_DIALOGUE[track], 36, panelsVisible)
+    const { displayed, finished, skip } = useTypewriter(TRACK_DIALOGUE[track], 36, panelsVisible)
     return (
-        <div className= {`${styles.panel} ${styles.catDialogue} ${track === 'amber' ? styles.amberTrack : ''} ${panelsVisible ? styles.panelVisible : ''}`
-}>
-    <div className={ styles.catLabel }> Qubit Cat: </div>
-        < div className = { styles.catText } >
-            { displayed }
-{ !finished && <span className={ styles.cursor }>▊</span> }
-</div>
-    </div>
+        <div 
+            className={`${styles.panel} ${styles.catDialogue} ${track === 'amber' ? styles.amberTrack : ''} ${panelsVisible ? styles.panelVisible : ''}`}
+            onClick={() => !finished && skip()}
+            style={{ cursor: finished ? 'default' : 'pointer' }}
+        >
+            <div className={styles.catLabel}>Qubit Cat:</div>
+            <div className={styles.catText}>
+                {displayed}
+                {!finished && <span className={styles.cursor}>▊</span>}
+            </div>
+        </div>
     )
 }
 
@@ -127,6 +115,7 @@ function LessonPanels({ track, panelsVisible, onComplete }: { track: Track; pane
     const current = panels[panelIndex]
     const isLast = panelIndex >= panels.length - 1
     useEffect(() => { setPanelIndex(0) }, [track])
+    const { displayed, finished, skip } = useTypewriter(current?.text ?? '', 32, panelsVisible)
     const handleNext = () => isLast ? onComplete() : setPanelIndex(i => i + 1)
 
     if (!track) return null
@@ -139,7 +128,15 @@ function LessonPanels({ track, panelsVisible, onComplete }: { track: Track; pane
                 { track === 'blue' ? '🔵 Intuition' : '🟡 Technical'}
 </span>
     </div>
-    < p className = { styles.lessonText } > { current.text } </p>
+    <div 
+        onClick={() => !finished && skip()}
+        style={{ cursor: finished ? 'default' : 'pointer' }}
+    >
+        <p className={styles.lessonText}>
+            {displayed}
+            {!finished && <span className={styles.cursor}>▊</span>}
+        </p>
+    </div>
 {
     track === 'amber' && 'math' in current && current.math && (
         <code className={ styles.lessonMath }> { current.math } </code>
@@ -269,14 +266,14 @@ function CompletionPanel({ track, panelsVisible }: { track: Track; panelsVisible
 }
 
 // ─── MODULE 1 OVERLAY (main export) ──────────────────────────────────────────
-export interface Module1OverlayProps {
+export interface QubitOverlayProps {
     panelsVisible: boolean; track: Track; phase: Phase
     onTrackSelect: (t: 'blue' | 'amber') => void
     onLessonComplete: () => void; onQuizComplete: () => void
     onQuizResult: (correct: boolean) => void; sphereClicked: boolean
 }
 
-export function Module1Overlay({ panelsVisible, track, phase, onTrackSelect, onLessonComplete, onQuizComplete, onQuizResult, sphereClicked }: Module1OverlayProps) {
+export function QubitOverlay({ panelsVisible, track, phase, onTrackSelect, onLessonComplete, onQuizComplete, onQuizResult, sphereClicked }: QubitOverlayProps) {
     const navigate = useNavigate()
     const PHASE_LABELS: Record<Phase, string> = { hook: 'MODULE 1', lesson: 'LESSON', quiz: 'QUIZ', complete: 'COMPLETE' }
     return (

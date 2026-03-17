@@ -8,11 +8,11 @@ import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
 import { useCat } from '../../context/CatContext'
 import { useCatNPCTransition } from '../../hooks/useCatNPCTransition'
-import Module1Scene from './Module1Scene'
-import { Module1Overlay } from './Module1Overlay'
-import type { Phase, Track } from './Module1Scene'
+import QubitScene from './QubitScene'
+import { QubitOverlay } from './QubitOverlay'
+import type { Phase, Track } from './QubitScene'
 
-export function Module1() {
+export function QubitModule() {
     const { setMode, setCatPosition, setQubitState } = useCat()
 
     const [phase, setPhase] = useState<Phase>('hook')
@@ -71,7 +71,7 @@ export function Module1() {
                 dpr={[1, 2]}
             >
                 <Suspense fallback={null}>
-                    <Module1Scene
+                    <QubitScene
                         track={track}
                         phase={phase}
                         onCatSettled={handleCatSettled}
@@ -85,7 +85,7 @@ export function Module1() {
             </Canvas>
 
             {/* HTML overlay */}
-            <Module1Overlay
+            <QubitOverlay
                 panelsVisible={panelsVisible}
                 track={track}
                 phase={phase}

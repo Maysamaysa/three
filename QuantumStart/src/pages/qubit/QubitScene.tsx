@@ -1,5 +1,5 @@
 /**
- * Module1Scene.tsx — R3F scene for Module 1 "What is a Qubit?"
+ * QubitScene.tsx — R3F scene for "What is a Qubit?"
  *
  * ─── MODEL SIZE CONFIG ────────────────────────────────────────────
  *  Cat NPC:    <group scale={CAT_SCALE}>  (outer group)
@@ -43,7 +43,7 @@ const CAT_LOOK_Y = 0.60   // vertical range radians
 const CAT_LOOK_SPEED = 0.07   // follow speed: 0.03=lazy, 0.07=default, 0.15=snappy
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
-interface Module1SceneProps {
+interface QubitSceneProps {
     track: Track
     phase: Phase
     onCatSettled: () => void
@@ -454,7 +454,7 @@ function CameraController({ phase }: { phase: Phase }) {
 }
 
 // ─── MODULE 1 SCENE (main export) ─────────────────────────────────────────────
-export default function Module1Scene({ track, phase, onCatSettled, onCoinClick, onSphereClick, quizCorrect = null, showParticles = false, catRetreat = false }: Module1SceneProps) {
+export default function QubitScene({ track, phase, onCatSettled, onCoinClick, onSphereClick, quizCorrect = null, showParticles = false, catRetreat = false }: QubitSceneProps) {
     const isQuiz = phase === 'quiz'
     const showBraket = track === 'amber' && phase === 'lesson'
     return (

@@ -1,25 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useCat } from '../context/CatContext'
+import { useTypewriter } from '../hooks/useTypewriter'
 import styles from './Landing.module.css'
-
-// ─── TYPEWRITER HOOK ──────────────────────────────────────────────────────────
-function useTypewriter(text: string, speed = 35, active = true) {
-    const [displayedText, setDisplayedText] = useState('')
-    const [isFinished, setIsFinished] = useState(false)
-    useEffect(() => {
-        if (!active) return
-        setDisplayedText('')
-        setIsFinished(false)
-        let i = 0
-        const timer = setInterval(() => {
-            if (i < text.length) { setDisplayedText(prev => prev + text.charAt(i)); i++ }
-            else { clearInterval(timer); setIsFinished(true) }
-        }, speed)
-        return () => clearInterval(timer)
-    }, [text, speed, active])
-    return { displayedText, isFinished }
-}
 
 // ─── LANDING PAGE ─────────────────────────────────────────────────────────────
 export function Landing() {
@@ -39,13 +22,19 @@ export function Landing() {
     const phase1Text = "*Yawn*... Oh! An Observer? You caught me in a state of deep superposition. Or maybe just a fuzzy nap... both are equally valid until you clicked!"
     const phase2Text = "I'm Qubit, your guide to the weird, the tiny, and the 'both-at-once.' We call it Quantum, and it's the secret language of the universe. Want to learn how to break the 'on or off' rules of your boring old computer?"
 
-    const { displayedText: currentText, isFinished: textFinished } = useTypewriter(
+    const { displayed: currentText, finished: textFinished, skip } = useTypewriter(
         dialoguePhase === 1 ? phase1Text : phase2Text,
         40,
         isAwake  // typewriter only runs after cat wakes up
     )
 
     const nextPhase = () => { setDialoguePhase(2); setHoveredChoice(null) }
+
+    const handleBeginJourney = () => {
+        setCatPosition('corner')
+        setMode('npc')
+        setTimeout(() => navigate('/learn'), 350)
+    }
 
     const handleTrackSelect = (track: 'blue' | 'amber', route: string) => {
         setQubitState(track)
@@ -63,11 +52,15 @@ export function Landing() {
             {/* All interactive elements need pointer-events: auto */}
             {isAwake && (
                 <div className={styles.dialogueOverlay} style={{ pointerEvents: 'auto' }}>
-                    <div className={styles.speechBubble}>
+                    <div 
+                        className={styles.speechBubble} 
+                        onClick={() => !textFinished && skip()}
+                        style={{ cursor: textFinished ? 'default' : 'pointer' }}
+                    >
                         <p className={styles.qubitName}>Qubit:</p>
                         <p className={styles.dialogueText}>
                             {currentText}
-                            {textFinished && dialoguePhase === 1 && <span className={styles.cursor}>_</span>}
+                            {!textFinished && <span className={styles.cursor}>_</span>}
                         </p>
                     </div>
 
@@ -98,19 +91,9 @@ export function Landing() {
                                         className={`${styles.choiceBtn} ${styles.blueChoice}`}
                                         onMouseEnter={() => setHoveredChoice('A')}
                                         onMouseLeave={() => setHoveredChoice(null)}
-                                        onClick={() => handleTrackSelect('blue', '/learn')}
+                                        onClick={handleBeginJourney}
                                     >
-                                        <span className={styles.choiceEye}>👁️</span>
-                                        Teach me the secret language!
-                                    </button>
-                                    <button
-                                        className={`${styles.choiceBtn} ${styles.amberChoice}`}
-                                        onMouseEnter={() => setHoveredChoice('B')}
-                                        onMouseLeave={() => setHoveredChoice(null)}
-                                        onClick={() => handleTrackSelect('amber', '/playground')}
-                                    >
-                                        <span className={styles.choiceEye}>👁️</span>
-                                        I'm here to play!
+                                        ✨ Begin Journey
                                     </button>
                                 </>
                             )}

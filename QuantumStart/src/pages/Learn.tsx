@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { Html } from '@react-three/drei'
 import styles from './Learn.module.css'
 import { useCat } from '../context/CatContext'
+import { useTypewriter } from '../hooks/useTypewriter'
 
 
 // ─── MODULE DATA ──────────────────────────────────────────────────────────────
@@ -343,11 +344,12 @@ interface ModuleCardProps {
     total: number
     selected: boolean
     dimmed: boolean
-    anySelected: boolean   // freeze the whole ring when any card is selected
+    anySelected: boolean
     onSelect: (id: string) => void
+    orbitRotation: number
 }
 
-function ModuleCard({ module, index, total, selected, dimmed, anySelected, onSelect }: ModuleCardProps) {
+function ModuleCard({ module, index, total, selected, dimmed, anySelected, onSelect, orbitRotation }: ModuleCardProps) {
     const groupRef = useRef<THREE.Group>(null)
     const globeRef = useRef<THREE.Mesh>(null)
     const [hovered, setHovered] = useState(false)
@@ -355,35 +357,17 @@ function ModuleCard({ module, index, total, selected, dimmed, anySelected, onSel
     // ── CONFIG ─────────────────────────────────────────────────────────────────
     // Orbit radius (world units). Increase to push modules further from center.
     const RADIUS = 5.2
-    // Orbit speed (rad/s). All cards share the same value so the ring stays rigid.
-    const ORBIT_SPEED = 0.06
     // ────────────────────────────────────────────────────────────────────────────
 
     const BASE_ANGLE = ((index / total) * Math.PI * 2) - Math.PI / 2
     const bobOffset = index * 1.1
     const bobAmp = 0.07 + (index % 3) * 0.02
 
-    // Capture each card's live angle the moment the ring freezes
-    const frozenAngleRef = useRef<number | null>(null)
-    const prevAnySelectedRef = useRef(anySelected)
-
     useFrame((state) => {
         if (!groupRef.current) return
         const t = state.clock.getElapsedTime()
 
-        const liveAngle = BASE_ANGLE + t * ORBIT_SPEED
-
-        // Freeze: capture angle when anySelected transitions false → true
-        if (anySelected && !prevAnySelectedRef.current) {
-            frozenAngleRef.current = liveAngle
-        }
-        // Un-freeze: clear when no card is selected
-        if (!anySelected) frozenAngleRef.current = null
-        prevAnySelectedRef.current = anySelected
-
-        const angle = anySelected && frozenAngleRef.current !== null
-            ? frozenAngleRef.current
-            : liveAngle
+        const angle = BASE_ANGLE + orbitRotation
 
         const x = Math.cos(angle) * RADIUS
         const y = Math.sin(angle) * RADIUS + (anySelected ? 0 : Math.sin(t * 0.55 + bobOffset) * bobAmp)
@@ -511,39 +495,6 @@ function ModuleCard({ module, index, total, selected, dimmed, anySelected, onSel
                         {module.emoji} {module.name}
                     </div>
 
-                    {/* Track buttons */}
-                    {!module.locked && (
-                        <div style={{ display: 'flex', gap: '5px' }}>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onSelect(module.id) }}
-                                style={{
-                                    flex: 1, background: 'rgba(93,167,219,0.22)',
-                                    border: '1px solid rgba(93,167,219,0.55)',
-                                    borderRadius: '8px', color: '#7ec8f0',
-                                    fontSize: '10px', fontWeight: 700,
-                                    fontFamily: 'Space Mono, monospace',
-                                    padding: '5px 0', cursor: 'pointer', transition: 'all 0.2s',
-                                    textShadow: '0 0 6px rgba(93,167,219,0.6)',
-                                }}
-                                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(93,167,219,0.45)'; e.currentTarget.style.color = '#fff' }}
-                                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(93,167,219,0.22)'; e.currentTarget.style.color = '#7ec8f0' }}
-                            >👁 |0⟩</button>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onSelect(module.id) }}
-                                style={{
-                                    flex: 1, background: 'rgba(196,149,90,0.22)',
-                                    border: '1px solid rgba(196,149,90,0.55)',
-                                    borderRadius: '8px', color: '#e0b87a',
-                                    fontSize: '10px', fontWeight: 700,
-                                    fontFamily: 'Space Mono, monospace',
-                                    padding: '5px 0', cursor: 'pointer', transition: 'all 0.2s',
-                                    textShadow: '0 0 6px rgba(196,149,90,0.6)',
-                                }}
-                                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(196,149,90,0.45)'; e.currentTarget.style.color = '#fff' }}
-                                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(196,149,90,0.22)'; e.currentTarget.style.color = '#e0b87a' }}
-                            >👁 |1⟩</button>
-                        </div>
-                    )}
                 </div>
             </Html>
         </group>
@@ -558,6 +509,17 @@ interface OrbitRingProps {
 
 function OrbitRing({ selectedId, onSelect }: OrbitRingProps) {
     const anySelected = selectedId !== null
+    const [rotation, setRotation] = useState(0)
+    const persistentRotationRef = useRef(0)
+    const ORBIT_SPEED = 0.06
+
+    useFrame((_state, delta) => {
+        if (!anySelected) {
+            persistentRotationRef.current += delta * ORBIT_SPEED
+            setRotation(persistentRotationRef.current)
+        }
+    })
+
     return (
         <group>
             {MODULES.map((mod, i) => (
@@ -569,29 +531,12 @@ function OrbitRing({ selectedId, onSelect }: OrbitRingProps) {
                     selected={selectedId === mod.id}
                     dimmed={anySelected && selectedId !== mod.id}
                     anySelected={anySelected}
-                    onSelect={(id) => onSelect(id, 'blue')}
+                    onSelect={(id) => onSelect(id)}
+                    orbitRotation={rotation}
                 />
             ))}
         </group>
     )
-}
-
-// ─── TYPEWRITER HOOK ──────────────────────────────────────────────────────────
-function useTypewriter(text: string, speed = 32, active = true) {
-    const [displayed, setDisplayed] = useState('')
-    const [finished, setFinished] = useState(false)
-    useEffect(() => {
-        if (!active || !text) return
-        setDisplayed('')
-        setFinished(false)
-        let i = 0
-        const t = setInterval(() => {
-            if (i < text.length) { setDisplayed(p => p + text.charAt(i)); i++ }
-            else { clearInterval(t); setFinished(true) }
-        }, speed)
-        return () => clearInterval(t)
-    }, [text, speed, active])
-    return { displayed, finished }
 }
 
 // ─── LEARN PAGE ───────────────────────────────────────────────────────────────
@@ -599,9 +544,7 @@ export function Learn() {
     const navigate = useNavigate()
     const { setMode, setCatPosition, setQubitState: setCatQubit } = useCat()
     const [selectedId, setSelectedId] = useState<string | null>(null)
-    const [selectedTrack, setSelectedTrack] = useState<Track>('blue')
     const [dialogueText, setDialogueText] = useState('')
-    const [showConfirm, setShowConfirm] = useState(false)
     const [confirming, setConfirming] = useState(false)
 
     // On mount: configure cat for NPC center mode (hub layout)
@@ -613,34 +556,24 @@ export function Learn() {
 
     const selectedModule = MODULES.find(m => m.id === selectedId) ?? null
 
-    const { displayed, finished } = useTypewriter(
+    const { displayed, finished, skip } = useTypewriter(
         dialogueText, 35, !!dialogueText
     )
 
     // When a card is selected
-    const handleSelect = (id: string, track: Track = 'blue') => {
+    const handleSelect = (id: string) => {
         const mod = MODULES.find(m => m.id === id)
         if (!mod || mod.locked) return
 
-        const qubit = track === 'blue' ? 'blue' : 'amber'
         setSelectedId(id)
-        setSelectedTrack(track)
-        setShowConfirm(false)
         setConfirming(false)
-        setCatQubit(qubit)   // drives the persistent cat's sparkle colour + bubble
+        setCatQubit('idle')
 
-        const text = track === 'blue' ? mod.qubitBlue : mod.qubitAmber
         setDialogueText('')
-        requestAnimationFrame(() => setDialogueText(text))
+        requestAnimationFrame(() => setDialogueText(mod.qubitBlue))
     }
 
-    // Show confirm after typewriter finishes
-    useEffect(() => {
-        if (finished && selectedId) {
-            const t = setTimeout(() => setShowConfirm(true), 300)
-            return () => clearTimeout(t)
-        }
-    }, [finished, selectedId])
+    // No extra step needed anymore
 
     const handleConfirm = () => {
         if (!selectedModule) return
@@ -651,7 +584,6 @@ export function Learn() {
     const handleDismiss = () => {
         setSelectedId(null)
         setDialogueText('')
-        setShowConfirm(false)
         setCatQubit('idle')
     }
 
@@ -687,49 +619,31 @@ export function Learn() {
                 ← Back
             </button>
 
-            {/* ── Qubit Dialogue Panel ── */}
-            {dialogueText && (
+            {/* ── Module Intro Overlay ── */}
+            {selectedId && (
                 <div className={styles.dialoguePanel} style={{ opacity: confirming ? 0 : 1, transition: 'opacity 0.5s ease' }}>
-                    {/* Module title */}
+                    <button className={styles.dismissBtn} style={{ position: 'absolute', top: 20, right: 20 }} onClick={handleDismiss}>✕</button>
+
                     <div className={styles.dialogueHeader}>
-                        <span className={styles.moduleEmoji}>{selectedModule?.emoji}</span>
-                        <span className={styles.moduleName}>{selectedModule?.name}</span>
-                        <span
-                            className={styles.trackBadge}
-                            style={{
-                                color: selectedTrack === 'blue' ? '#5DA7DB' : '#C4955A',
-                                borderColor: selectedTrack === 'blue' ? '#5DA7DB' : '#C4955A'
-                            }}
-                        >
-                            {selectedTrack === 'blue' ? '👁 Intuition' : '👁 Technical'}
-                        </span>
-                        <button className={styles.dismissBtn} onClick={handleDismiss}>✕</button>
+                        <div className={styles.moduleSubtitle}>
+                            MODULE {MODULES.findIndex(m => m.id === selectedId) + 1}
+                        </div>
+                        <h2 className={styles.moduleTitle}>{selectedModule?.name}</h2>
                     </div>
 
-                    {/* Qubit speech */}
-                    <div className={styles.dialogueBubble}>
-                        <span className={styles.qubitLabel}>Qubit:</span>
+                    <div 
+                        className={styles.dialogueBubble}
+                        onClick={() => !finished && skip()}
+                        style={{ cursor: finished ? 'default' : 'pointer' }}
+                    >
                         <p className={styles.dialogueText}>
                             {displayed}
                             {!finished && <span className={styles.cursor}>▊</span>}
                         </p>
                     </div>
 
-                    {/* Track switcher + confirm */}
-                    {showConfirm && (
+                    {finished && (
                         <div className={styles.confirmRow}>
-                            <div className={styles.trackSwitcher}>
-                                <button
-                                    className={`${styles.trackBtn} ${selectedTrack === 'blue' ? styles.trackActive : ''}`}
-                                    style={{ '--track-color': '#5DA7DB' } as React.CSSProperties}
-                                    onClick={() => handleSelect(selectedId!, 'blue')}
-                                >👁 Intuition</button>
-                                <button
-                                    className={`${styles.trackBtn} ${selectedTrack === 'amber' ? styles.trackActive : ''}`}
-                                    style={{ '--track-color': '#C4955A' } as React.CSSProperties}
-                                    onClick={() => handleSelect(selectedId!, 'amber')}
-                                >👁 Technical</button>
-                            </div>
                             <button className={styles.confirmBtn} onClick={handleConfirm}>
                                 Begin Lesson →
                             </button>
