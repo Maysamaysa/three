@@ -2,9 +2,10 @@
  * SuperpositionOverlay.tsx — HTML panels for "Superposition"
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
+import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom'
-import { useTypewriter } from '../../hooks/useTypewriter'
+import { useTypewriter } from '../../../hooks/useTypewriter'
 import styles from './SuperpositionOverlay.module.css'
 import type { Track, Phase } from './SuperpositionScene'
 
@@ -70,7 +71,7 @@ function CatDialogueBubble({ track, panelsVisible }: { track: Track; panelsVisib
     )
 }
 
-function LessonPanels({ track, panelsVisible, hasTransformed, onComplete }: { track: Track; panelsVisible: boolean; hasTransformed: boolean; onComplete: () => void }) {
+function LessonPanels({ track, panelsVisible, hasTransformed, onComplete, phase }: { track: Track; panelsVisible: boolean; hasTransformed: boolean; onComplete: () => void; phase: Phase }) {
     const [index, setIndex] = useState(0)
     const panels = track === 'amber' ? AMBER_PANELS : BLUE_PANELS
     const current = panels[index]
@@ -113,7 +114,7 @@ function LessonPanels({ track, panelsVisible, hasTransformed, onComplete }: { tr
     )
 }
 
-function QuizPanel({ track, panelsVisible, onComplete }: { track: Track; panelsVisible: boolean; onComplete: (correct: boolean) => void }) {
+function QuizPanel({ track, panelsVisible, onQuizResult, onQuizComplete }: { track: Track; panelsVisible: boolean; onQuizResult: (correct: boolean) => void; onQuizComplete: () => void }) {
     const questions = QUIZ_QUESTIONS.filter(q => track && q.tracks.includes(track))
     const [selected, setSelected] = useState<number | null>(null)
     const [answered, setAnswered] = useState(false)
@@ -123,7 +124,7 @@ function QuizPanel({ track, panelsVisible, onComplete }: { track: Track; panelsV
         if (answered) return
         setSelected(idx)
         setAnswered(true)
-        onComplete(currentQ.answers[idx].correct)
+        onQuizResult(currentQ.answers[idx].correct)
     }
 
     if (!track || !currentQ) return null
@@ -150,7 +151,18 @@ function QuizPanel({ track, panelsVisible, onComplete }: { track: Track; panelsV
                     </button>
                 ))}
              </div>
-             {answered && <button className={styles.nextBtn} onClick={() => onComplete(true)} style={{ marginTop: '20px' }}>Finish →</button>}
+             {answered && (
+                 <button 
+                    className={styles.nextBtn} 
+                    onClick={() => {
+                        onQuizComplete()
+                        // if we want to navigate or just finish
+                    }} 
+                    style={{ marginTop: '20px' }}
+                 >
+                    Finish →
+                 </button>
+             )}
         </div>
     )
 }
@@ -180,8 +192,8 @@ export function SuperpositionOverlay({
                     {track && <CatDialogueBubble track={track} panelsVisible={panelsVisible} />}
                 </>
             )}
-            {phase === 'lesson' && <LessonPanels track={track} panelsVisible={panelsVisible} hasTransformed={hasTransformed} onComplete={onLessonComplete} />}
-            {phase === 'quiz' && <QuizPanel track={track} panelsVisible={panelsVisible} onComplete={onQuizResult} />}
+            {phase === 'lesson' && <LessonPanels track={track} panelsVisible={panelsVisible} hasTransformed={hasTransformed} onComplete={onLessonComplete} phase={phase} />}
+            {phase === 'quiz' && <QuizPanel track={track} panelsVisible={panelsVisible} onQuizResult={onQuizResult} onQuizComplete={onQuizComplete} />}
             {phase === 'complete' && (
                  <div className={`${styles.panel} ${styles.completionPanel} ${styles.panelVisible}`}>
                     <div className={styles.badgeGlow}>🌊</div>

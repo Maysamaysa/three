@@ -136,20 +136,20 @@ function QubitModel({ hovered }: { hovered: boolean }) {
     })
     const col = hovered ? '#7ed6ff' : '#5DA7DB'
     return (
-        <group scale={hovered ? 1.15 : 1}>
-            <mesh ref={ref}>
-                <octahedronGeometry args={[0.28, 0]} />
-                <meshStandardMaterial color={col} emissive={col} emissiveIntensity={1.2} metalness={0.7} roughness={0.1} />
-            </mesh>
-            <mesh ref={ring1} rotation={[Math.PI / 2, 0, 0]}>
-                <torusGeometry args={[0.46, 0.022, 8, 48]} />
-                <meshStandardMaterial color="#5DA7DB" emissive="#5DA7DB" emissiveIntensity={1.0} transparent opacity={0.9} />
-            </mesh>
-            <mesh ref={ring2}>
-                <torusGeometry args={[0.46, 0.022, 8, 48]} />
-                <meshStandardMaterial color="#C4955A" emissive="#C4955A" emissiveIntensity={1.0} transparent opacity={0.9} />
-            </mesh>
-        </group>
+        <group scale= { hovered? 1.15: 1 } >
+        <mesh ref={ ref }>
+            <octahedronGeometry args={ [0.28, 0] } />
+                < meshStandardMaterial color = { col } emissive = { col } emissiveIntensity = { 1.2} metalness = { 0.7} roughness = { 0.1} />
+                    </mesh>
+                    < mesh ref = { ring1 } rotation = { [Math.PI / 2, 0, 0]} >
+                        <torusGeometry args={ [0.46, 0.022, 8, 48] } />
+                            < meshStandardMaterial color = "#5DA7DB" emissive = "#5DA7DB" emissiveIntensity = { 1.0} transparent opacity = { 0.9} />
+                                </mesh>
+                                < mesh ref = { ring2 } >
+                                    <torusGeometry args={ [0.46, 0.022, 8, 48] } />
+                                        < meshStandardMaterial color = "#C4955A" emissive = "#C4955A" emissiveIntensity = { 1.0} transparent opacity = { 0.9} />
+                                            </mesh>
+                                            </group>
     )
 }
 
@@ -166,18 +166,20 @@ function SuperpositionModel({ hovered }: { hovered: boolean }) {
     })
     const col = hovered ? '#ffcfe0' : '#FFB7C5'
     return (
-        <group ref={ref} scale={hovered ? 1.15 : 1}>
-            <mesh ref={coinRef}>
-                <cylinderGeometry args={[0.34, 0.34, 0.06, 32]} />
-                <meshStandardMaterial color={col} emissive={col} emissiveIntensity={1.1} metalness={0.8} roughness={0.05} />
-            </mesh>
-            {[-0.22, 0, 0.22].map((x, i) => (
-                <mesh key={i} position={[x, -0.32, 0]} rotation={[Math.PI / 2, 0, 0]}>
-                    <torusGeometry args={[0.1, 0.018, 6, 20]} />
-                    <meshStandardMaterial color="#5DA7DB" emissive="#5DA7DB" emissiveIntensity={1.2} transparent opacity={0.6 + i * 0.15} />
-                </mesh>
-            ))}
-        </group>
+        <group ref= { ref } scale = { hovered? 1.15: 1 } >
+            <mesh ref={ coinRef }>
+                <cylinderGeometry args={ [0.34, 0.34, 0.06, 32] } />
+                    < meshStandardMaterial color = { col } emissive = { col } emissiveIntensity = { 1.1} metalness = { 0.8} roughness = { 0.05} />
+                        </mesh>
+    {
+        [-0.22, 0, 0.22].map((x, i) => (
+            <mesh key= { i } position = { [x, -0.32, 0]} rotation = { [Math.PI / 2, 0, 0]} >
+            <torusGeometry args={ [0.1, 0.018, 6, 20]} />
+        <meshStandardMaterial color="#5DA7DB" emissive = "#5DA7DB" emissiveIntensity = { 1.2} transparent opacity = { 0.6 + i * 0.15 } />
+        </mesh>
+        ))
+    }
+    </group>
     )
 }
 
@@ -193,26 +195,28 @@ function BlochModel({ hovered }: { hovered: boolean }) {
     })
     const wireCol = hovered ? '#aaffee' : '#7effdd'
     return (
-        <group ref={ref} scale={hovered ? 1.15 : 1}>
+        <group ref= { ref } scale = { hovered? 1.15: 1 } >
             <mesh>
-                <sphereGeometry args={[0.36, 16, 16]} />
-                <meshStandardMaterial color={wireCol} emissive={wireCol} emissiveIntensity={0.5} transparent opacity={0.35} wireframe />
-            </mesh>
-            {[
-                { pos: [0, 0.38, 0] as [number, number, number], col: '#5DA7DB' },
-                { pos: [0, -0.38, 0] as [number, number, number], col: '#C4955A' },
-                { pos: [0.38, 0, 0] as [number, number, number], col: '#FFB7C5' },
-            ].map((ax, i) => (
-                <mesh key={i} position={ax.pos}>
-                    <sphereGeometry args={[0.05, 8, 8]} />
-                    <meshStandardMaterial color={ax.col} emissive={ax.col} emissiveIntensity={2.0} />
+            <sphereGeometry args={ [0.36, 16, 16] } />
+                < meshStandardMaterial color = { wireCol } emissive = { wireCol } emissiveIntensity = { 0.5} transparent opacity = { 0.35} wireframe />
+                    </mesh>
+    {
+        [
+            { pos: [0, 0.38, 0] as [number, number, number], col: '#5DA7DB' },
+            { pos: [0, -0.38, 0] as [number, number, number], col: '#C4955A' },
+            { pos: [0.38, 0, 0] as [number, number, number], col: '#FFB7C5' },
+        ].map((ax, i) => (
+            <mesh key= { i } position = { ax.pos } >
+            <sphereGeometry args={ [0.05, 8, 8]} />
+        <meshStandardMaterial color={ ax.col } emissive = { ax.col } emissiveIntensity = { 2.0} />
+        </mesh>
+        ))
+    }
+    <mesh ref={ arrowRef }>
+        <cylinderGeometry args={ [0.018, 0.018, 0.42, 8] } />
+            < meshStandardMaterial color = "#ffffff" emissive = "#ffffff" emissiveIntensity = { 1.5} />
                 </mesh>
-            ))}
-            <mesh ref={arrowRef}>
-                <cylinderGeometry args={[0.018, 0.018, 0.42, 8]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1.5} />
-            </mesh>
-        </group>
+                </group>
     )
 }
 
@@ -227,15 +231,15 @@ function GateModel({ hovered }: { hovered: boolean }) {
     })
     const col = hovered ? '#ffd580' : '#C4955A'
     return (
-        <group scale={hovered ? 1.15 : 1}>
-            <mesh ref={ref}>
-                <boxGeometry args={[0.46, 0.46, 0.08]} />
-                <meshStandardMaterial color={col} emissive={col} emissiveIntensity={1.0} metalness={0.6} roughness={0.2} />
-            </mesh>
-            <Html center position={[0, 0, 0.08]}>
-                <div style={{ color: '#fff', fontSize: '0.9rem', fontWeight: 900, fontFamily: 'Space Mono, monospace', pointerEvents: 'none', textShadow: '0 0 12px rgba(255,255,255,1)' }}>H</div>
-            </Html>
-        </group>
+        <group scale= { hovered? 1.15: 1 } >
+        <mesh ref={ ref }>
+            <boxGeometry args={ [0.46, 0.46, 0.08] } />
+                < meshStandardMaterial color = { col } emissive = { col } emissiveIntensity = { 1.0} metalness = { 0.6} roughness = { 0.2} />
+                    </mesh>
+                    < Html center position = { [0, 0, 0.08]} >
+                        <div style={ { color: '#fff', fontSize: '0.9rem', fontWeight: 900, fontFamily: 'Space Mono, monospace', pointerEvents: 'none', textShadow: '0 0 12px rgba(255,255,255,1)' } }> H </div>
+                            </Html>
+                            </group>
     )
 }
 
@@ -258,14 +262,16 @@ function MeasurementModel({ hovered }: { hovered: boolean }) {
     })
     const col = hovered ? '#ffcfe0' : '#FFB7C5'
     return (
-        <group ref={groupRef} scale={hovered ? 1.15 : 1}>
-            {points.map((p, i) => (
-                <mesh key={i} position={p}>
-                    <sphereGeometry args={[0.024, 4, 4]} />
-                    <meshStandardMaterial color={col} emissive={col} emissiveIntensity={1.5} transparent opacity={0.75} />
-                </mesh>
-            ))}
-        </group>
+        <group ref= { groupRef } scale = { hovered? 1.15: 1 } >
+        {
+            points.map((p, i) => (
+                <mesh key= { i } position = { p } >
+                <sphereGeometry args={ [0.024, 4, 4]} />
+            <meshStandardMaterial color={ col } emissive = { col } emissiveIntensity = { 1.5} transparent opacity = { 0.75} />
+            </mesh>
+            ))
+        }
+            </group>
     )
 }
 
@@ -279,20 +285,20 @@ function EntanglementModel({ hovered }: { hovered: boolean }) {
         ref.current.rotation.z = Math.sin(t * 0.5) * 0.2
     })
     return (
-        <group ref={ref} scale={hovered ? 1.15 : 1}>
-            <mesh position={[-0.28, 0, 0]}>
-                <sphereGeometry args={[0.18, 12, 12]} />
-                <meshStandardMaterial color="#5DA7DB" emissive="#5DA7DB" emissiveIntensity={1.4} transparent opacity={0.95} />
-            </mesh>
-            <mesh position={[0.28, 0, 0]}>
-                <sphereGeometry args={[0.18, 12, 12]} />
-                <meshStandardMaterial color="#C4955A" emissive="#C4955A" emissiveIntensity={1.4} transparent opacity={0.95} />
-            </mesh>
-            <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-                <cylinderGeometry args={[0.01, 0.01, 0.56, 6]} />
-                <meshStandardMaterial color="#FFB7C5" emissive="#FFB7C5" emissiveIntensity={2.0} transparent opacity={0.8} />
-            </mesh>
-        </group>
+        <group ref= { ref } scale = { hovered? 1.15: 1 } >
+            <mesh position={ [-0.28, 0, 0] }>
+                <sphereGeometry args={ [0.18, 12, 12] } />
+                    < meshStandardMaterial color = "#5DA7DB" emissive = "#5DA7DB" emissiveIntensity = { 1.4} transparent opacity = { 0.95} />
+                        </mesh>
+                        < mesh position = { [0.28, 0, 0]} >
+                            <sphereGeometry args={ [0.18, 12, 12] } />
+                                < meshStandardMaterial color = "#C4955A" emissive = "#C4955A" emissiveIntensity = { 1.4} transparent opacity = { 0.95} />
+                                    </mesh>
+                                    < mesh position = { [0, 0, 0]} rotation = { [0, 0, Math.PI / 2]} >
+                                        <cylinderGeometry args={ [0.01, 0.01, 0.56, 6] } />
+                                            < meshStandardMaterial color = "#FFB7C5" emissive = "#FFB7C5" emissiveIntensity = { 2.0} transparent opacity = { 0.8} />
+                                                </mesh>
+                                                </group>
     )
 }
 
@@ -314,14 +320,16 @@ function AlgorithmModel({ hovered }: { hovered: boolean }) {
     }, [])
     const col = hovered ? '#ffd580' : '#C4955A'
     return (
-        <group ref={ref} scale={hovered ? 1.15 : 1}>
-            {points.map((p, i) => (
-                <mesh key={i} position={p}>
-                    <sphereGeometry args={[0.03, 6, 6]} />
-                    <meshStandardMaterial color={col} emissive={col} emissiveIntensity={1.6} transparent opacity={0.75 + (i / 39) * 0.25} />
-                </mesh>
-            ))}
-        </group>
+        <group ref= { ref } scale = { hovered? 1.15: 1 } >
+        {
+            points.map((p, i) => (
+                <mesh key= { i } position = { p } >
+                <sphereGeometry args={ [0.03, 6, 6]} />
+            <meshStandardMaterial color={ col } emissive = { col } emissiveIntensity = { 1.6} transparent opacity = { 0.75 + (i / 39) * 0.25 } />
+            </mesh>
+            ))
+        }
+            </group>
     )
 }
 
@@ -392,112 +400,121 @@ function ModuleCard({ module, index, total, selected, dimmed, anySelected, onSel
     const initPos: [number, number, number] = [Math.cos(BASE_ANGLE) * RADIUS, Math.sin(BASE_ANGLE) * RADIUS, 0]
 
     return (
-        <group ref={groupRef} position={initPos}>
+        <group ref= { groupRef } position = { initPos } >
 
-            {/* ── Selection glow ring ── */}
-            {selected && (
-                <mesh rotation={[Math.PI / 2, 0, 0]}>
-                    <torusGeometry args={[0.72, 0.025, 8, 64]} />
-                    <meshStandardMaterial color="#FFB7C5" emissive="#FFB7C5" emissiveIntensity={2.5} transparent opacity={0.9} />
-                </mesh>
-            )}
+            {/* ── Selection glow ring ── */ }
+    {
+        selected && (
+            <mesh rotation={ [Math.PI / 2, 0, 0] }>
+                <torusGeometry args={ [0.72, 0.025, 8, 64] } />
+                    < meshStandardMaterial color = "#FFB7C5" emissive = "#FFB7C5" emissiveIntensity = { 2.5} transparent opacity = { 0.9} />
+                        </mesh>
+            )
+    }
 
-            {/* ── Glass globe ── */}
-            <mesh ref={globeRef}>
-                <sphereGeometry args={[0.58, 28, 28]} />
-                <meshStandardMaterial
-                    color="#C1E1C1"
-                    emissive="#C1E1C1"
-                    emissiveIntensity={0.05}
-                    transparent
-                    opacity={0.14}
-                    roughness={0.05}
-                    metalness={0.2}
-                    side={THREE.FrontSide}
-                />
-            </mesh>
-            {/* Globe highlight rim */}
-            <mesh rotation={[0.3, 0, 0]}>
-                <torusGeometry args={[0.49, 0.008, 8, 48]} />
-                <meshStandardMaterial
-                    color="#ffffff"
-                    emissive="#ffffff"
-                    emissiveIntensity={0.35}
-                    transparent
-                    opacity={0.28}
-                />
-            </mesh>
+    {/* ── Glass globe ── */ }
+    <mesh ref={ globeRef }>
+        <sphereGeometry args={ [0.58, 28, 28] } />
+            < meshStandardMaterial
+    color = "#C1E1C1"
+    emissive = "#C1E1C1"
+    emissiveIntensity = { 0.05}
+    transparent
+    opacity = { 0.14}
+    roughness = { 0.05}
+    metalness = { 0.2}
+    side = { THREE.FrontSide }
+        />
+        </mesh>
+    {/* Globe highlight rim */ }
+    <mesh rotation={ [0.3, 0, 0] }>
+        <torusGeometry args={ [0.49, 0.008, 8, 48] } />
+            < meshStandardMaterial
+    color = "#ffffff"
+    emissive = "#ffffff"
+    emissiveIntensity = { 0.35}
+    transparent
+    opacity = { 0.28}
+        />
+        </mesh>
 
-            {/* ── 3D model inside the globe ── */}
-            <group position={[0, 0.05, 0]} scale={1.8}>
-                <ModelComponent hovered={hovered || selected} />
+    {/* ── 3D model inside the globe ── */ }
+    <group position={ [0, 0.05, 0] } scale = { 1.8} >
+        <ModelComponent hovered={ hovered || selected } />
             </group>
 
-            {/* ── HTML card below the globe ── */}
-            <Html
+    {/* ── HTML card below the globe ── */ }
+    <Html
                 center
-                position={[0, -0.78, 0]}
-                style={{ pointerEvents: dimmed ? 'none' : 'auto' }}
-                zIndexRange={[10, 0]}
-            >
-                <div
-                    onPointerEnter={() => setHovered(true)}
-                    onPointerLeave={() => setHovered(false)}
-                    onClick={() => !module.locked && onSelect(module.id)}
-                    style={{
-                        width: '148px',
-                        background: selected
-                            ? 'rgba(20,21,35,0.90)'
-                            : hovered
-                                ? 'rgba(20,21,35,0.78)'
-                                : 'rgba(20,21,35,0.62)',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
-                        border: selected
-                            ? '1px solid rgba(255,183,197,0.75)'
-                            : hovered
-                                ? '1px solid rgba(248,249,255,0.38)'
-                                : '1px solid rgba(248,249,255,0.15)',
+    position = { [0, -0.78, 0]}
+    style = {{ pointerEvents: dimmed ? 'none' : 'auto' }
+}
+zIndexRange = { [10, 0]}
+    >
+    <div
+                    onPointerEnter={ () => setHovered(true) }
+onPointerLeave = {() => setHovered(false)}
+onClick = {() => !module.locked && onSelect(module.id)}
+style = {{
+    width: '148px',
+        background: selected
+            ? 'rgba(20,21,35,0.90)'
+            : hovered
+                ? 'rgba(20,21,35,0.78)'
+                : 'rgba(20,21,35,0.62)',
+            backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                    border: selected
+                        ? '1px solid rgba(255,183,197,0.75)'
+                        : hovered
+                            ? '1px solid rgba(248,249,255,0.38)'
+                            : '1px solid rgba(248,249,255,0.15)',
                         borderRadius: '18px',
-                        padding: '11px 13px 12px',
-                        cursor: module.locked ? 'not-allowed' : 'pointer',
-                        opacity: dimmed ? 0.35 : 1,
-                        transition: 'all 0.25s ease',
-                        boxShadow: selected
-                            ? '0 0 32px rgba(255,183,197,0.4), 0 4px 20px rgba(0,0,0,0.6)'
-                            : '0 4px 16px rgba(0,0,0,0.5)',
-                        userSelect: 'none',
-                        transform: hovered && !dimmed ? 'translateY(-3px)' : 'translateY(0)',
-                        position: 'relative',
+                            padding: '11px 13px 12px',
+                                cursor: module.locked ? 'not-allowed' : 'pointer',
+                                    opacity: dimmed ? 0.35 : 1,
+                                        transition: 'all 0.25s ease',
+                                            boxShadow: selected
+                                                ? '0 0 32px rgba(255,183,197,0.4), 0 4px 20px rgba(0,0,0,0.6)'
+                                                : '0 4px 16px rgba(0,0,0,0.5)',
+                                                userSelect: 'none',
+                                                    transform: hovered && !dimmed ? 'translateY(-3px)' : 'translateY(0)',
+                                                        position: 'relative',
                     }}
                 >
-                    {/* Lock overlay */}
-                    {module.locked && (
-                        <div style={{
-                            position: 'absolute', inset: 0, borderRadius: '18px',
-                            background: 'rgba(10,10,20,0.65)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+    {/* Lock overlay */ }
+{
+    module.locked && (
+        <div style={
+            {
+                position: 'absolute', inset: 0, borderRadius: '18px',
+                    background: 'rgba(10,10,20,0.65)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: '1.2rem', zIndex: 2,
-                        }}>🔒</div>
-                    )}
+                        }
+    }>🔒</div>
+                    )
+}
 
-                    {/* Name */}
-                    <div style={{
-                        color: '#F8F9FF',
-                        fontSize: '12.5px',
-                        fontWeight: 700,
-                        fontFamily: 'DM Sans, sans-serif',
+{/* Name */ }
+<div style={
+    {
+        color: '#F8F9FF',
+            fontSize: '12.5px',
+                fontWeight: 700,
+                    fontFamily: 'DM Sans, sans-serif',
                         textAlign: 'center',
-                        lineHeight: 1.35,
-                        marginBottom: '9px',
-                        textShadow: '0 1px 8px rgba(0,0,0,0.9)',
-                    }}>
-                        {module.emoji} {module.name}
-                    </div>
+                            lineHeight: 1.35,
+                                marginBottom: '9px',
+                                    textShadow: '0 1px 8px rgba(0,0,0,0.9)',
+                    }
+}>
+    { module.emoji } { module.name }
+</div>
 
-                </div>
-            </Html>
-        </group>
+    </div>
+    </Html>
+    </group>
     )
 }
 
@@ -522,20 +539,22 @@ function OrbitRing({ selectedId, onSelect }: OrbitRingProps) {
 
     return (
         <group>
-            {MODULES.map((mod, i) => (
+        {
+            MODULES.map((mod, i) => (
                 <ModuleCard
-                    key={mod.id}
-                    module={mod}
-                    index={i}
-                    total={MODULES.length}
-                    selected={selectedId === mod.id}
-                    dimmed={anySelected && selectedId !== mod.id}
-                    anySelected={anySelected}
-                    onSelect={(id) => onSelect(id)}
-                    orbitRotation={rotation}
-                />
+                    key= { mod.id }
+                    module = { mod }
+                    index = { i }
+                    total = { MODULES.length }
+                    selected = { selectedId === mod.id}
+                    dimmed = { anySelected && selectedId !== mod.id
+}
+anySelected = { anySelected }
+onSelect = {(id) => onSelect(id)}
+orbitRotation = { rotation }
+    />
             ))}
-        </group>
+</group>
     )
 }
 
@@ -588,76 +607,83 @@ export function Learn() {
     }
 
     return (
-        <div className={styles.container} style={{ pointerEvents: 'auto' }}>
-            {/* ── 3D Canvas (orbit ring only — cat is global at center) ── */}
-            <Canvas
-                className={styles.canvas}
-                camera={{ position: [0, 0, 13], fov: 58 }}
-                gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-                dpr={[1, 2]}
-                style={{ background: 'transparent' }}
+        <div className= { styles.container } style = {{ pointerEvents: 'auto' }
+}>
+    {/* ── 3D Canvas (orbit ring only — cat is global at center) ── */ }
+    < Canvas
+className = { styles.canvas }
+camera = {{ position: [0, 0, 13], fov: 58 }}
+gl = {{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+dpr = { [1, 2]}
+style = {{ background: 'transparent' }}
             >
-                <Suspense fallback={null}>
-                    <ambientLight intensity={1.2} />
-                    <directionalLight position={[5, 5, 5]} intensity={1.8} />
-                    <pointLight position={[-4, 3, -4]} intensity={1.2} color="#5DA7DB" />
-                    <pointLight position={[4, 3, 4]} intensity={1.0} color="#C4955A" />
+    <Suspense fallback={ null }>
+        <ambientLight intensity={ 1.2 } />
+            < directionalLight position = { [5, 5, 5]} intensity = { 1.8} />
+                <pointLight position={ [-4, 3, -4] } intensity = { 1.2} color = "#5DA7DB" />
+                    <pointLight position={ [4, 3, 4] } intensity = { 1.0} color = "#C4955A" />
 
-                    {/* Orbit ring of module cards rotating around the centered cat */}
-                    <OrbitRing
-                        selectedId={selectedId}
-                        onSelect={handleSelect}
-                    />
-                </Suspense>
-            </Canvas>
+                        {/* Orbit ring of module cards rotating around the centered cat */ }
+                        < OrbitRing
+selectedId = { selectedId }
+onSelect = { handleSelect }
+    />
+    </Suspense>
+    </Canvas>
 
-            {/* ── Back button ── */}
-            <button
-                className={styles.backBtn}
-                onClick={() => navigate('/')}
+{/* ── Back button ── */ }
+<button
+                className={ styles.backBtn }
+onClick = {() => navigate('/')}
             >
                 ← Back
-            </button>
+    </button>
 
-            {/* ── Module Intro Overlay ── */}
-            {selectedId && (
-                <div className={styles.dialoguePanel} style={{ opacity: confirming ? 0 : 1, transition: 'opacity 0.5s ease' }}>
-                    <button className={styles.dismissBtn} style={{ position: 'absolute', top: 20, right: 20 }} onClick={handleDismiss}>✕</button>
+{/* ── Module Intro Overlay ── */ }
+{
+    selectedId && (
+        <div className={ styles.dialoguePanel } style = {{ opacity: confirming ? 0 : 1, transition: 'opacity 0.5s ease' }
+}>
+    <button className={ styles.dismissBtn } style = {{ position: 'absolute', top: 20, right: 20 }} onClick = { handleDismiss } >✕</button>
 
-                    <div className={styles.dialogueHeader}>
-                        <div className={styles.moduleSubtitle}>
-                            MODULE {MODULES.findIndex(m => m.id === selectedId) + 1}
-                        </div>
-                        <h2 className={styles.moduleTitle}>{selectedModule?.name}</h2>
-                    </div>
-
-                    <div 
-                        className={styles.dialogueBubble}
-                        onClick={() => !finished && skip()}
-                        style={{ cursor: finished ? 'default' : 'pointer' }}
-                    >
-                        <p className={styles.dialogueText}>
-                            {displayed}
-                            {!finished && <span className={styles.cursor}>▊</span>}
-                        </p>
-                    </div>
-
-                    {finished && (
-                        <div className={styles.confirmRow}>
-                            <button className={styles.confirmBtn} onClick={handleConfirm}>
-                                Begin Lesson →
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* ── Hint when nothing selected ── */}
-            {!selectedId && (
-                <div className={styles.hintPill}>
-                    ✦ select a module to begin
-                </div>
-            )}
+        < div className = { styles.dialogueHeader } >
+            <div className={ styles.moduleSubtitle }>
+                MODULE { MODULES.findIndex(m => m.id === selectedId) + 1 }
+</div>
+    < h2 className = { styles.moduleTitle } > { selectedModule?.name } </h2>
         </div>
+
+        < div
+className = { styles.dialogueBubble }
+onClick = {() => !finished && skip()}
+style = {{ cursor: finished ? 'default' : 'pointer' }}
+                    >
+    <p className={ styles.dialogueText }>
+        { displayed }
+{ !finished && <span className={ styles.cursor }>▊</span> }
+</p>
+    </div>
+
+{
+    finished && (
+        <div className={ styles.confirmRow }>
+            <button className={ styles.confirmBtn } onClick = { handleConfirm } >
+                Begin Lesson →
+    </button>
+        </div>
+                    )
+}
+</div>
+            )}
+
+{/* ── Hint when nothing selected ── */ }
+{
+    !selectedId && (
+        <div className={ styles.hintPill }>
+                    ✦ select a module to begin
+        </div>
+            )
+}
+</div>
     )
 }

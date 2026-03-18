@@ -9,9 +9,9 @@ import { Landing } from './pages/Landing'
 import { Learn } from './pages/Learn'
 import { Playground } from './pages/Playground'
 import { TutorialChallenge } from './pages/TutorialChallenge'
-import { QubitModule } from './pages/qubit/QubitModule'
-import { SuperpositionModule } from './pages/superposition/SuperpositionModule'
-import { BlochSphereModule } from './pages/bloch/BlochSphereModule'
+import { QubitModule } from './pages/modules/qubit/QubitModule'
+import { SuperpositionModule } from './pages/modules/superposition/SuperpositionModule'
+import { BlochSphereModule } from './pages/modules/bloch/BlochSphereModule'
 import './App.css'
 
 // ─── GLOBAL CAT CANVAS ────────────────────────────────────────────────────────

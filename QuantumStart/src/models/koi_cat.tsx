@@ -109,7 +109,7 @@ function SparkleRing({ color, intensity, count = 40 }: SparkleRingProps) {
     }, [count])
 
     return (
-        <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
+        <instancedMesh ref={meshRef} args={[null as any, null as any, count]}>
             <octahedronGeometry args={[1, 0]} />
             <meshStandardMaterial
                 emissive={color}

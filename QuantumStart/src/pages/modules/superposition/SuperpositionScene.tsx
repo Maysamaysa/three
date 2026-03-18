@@ -4,7 +4,7 @@
 
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { useGLTF, useAnimations, Html, Text } from '@react-three/drei'
+import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import Koi_cat from '../../assets/koi_cat.glb'
 
@@ -129,12 +129,12 @@ function HGate({ active }: { active: boolean }) {
         <group position={[1.5, 0, 0]} ref={group}>
             {/* Frame */}
             <mesh>
-                <torusGeometry args={[1.5, 0.08, 16, 4]} rotation={[0, 0, Math.PI / 4]} />
+                <torusGeometry args={[1.5, 0.08, 16, 4]} />
                 <meshStandardMaterial color="#333" metalness={0.8} roughness={0.2} />
             </mesh>
             {/* Glow field */}
             <mesh ref={field}>
-                <cylinderGeometry args={[1.3, 1.3, 0.2, 32]} rotation={[Math.PI / 2, 0, 0]} />
+                <cylinderGeometry args={[0.02, 0.02, 3, 32]} />
                 <meshStandardMaterial 
                     color="#FFB7C5" 
                     emissive="#FFB7C5" 
@@ -161,7 +161,7 @@ function HGate({ active }: { active: boolean }) {
 function DraggableQubit({ hasTransformed, onTransform, track }: { hasTransformed: boolean; onTransform: () => void; track: Track }) {
     const group = useRef<THREE.Group>(null)
     const [dragging, setDragging] = useState(false)
-    const [pos, setPos] = useState(new THREE.Vector3(-4, 0, 0))
+    // const [pos, setPos] = useState(new THREE.Vector3(-4, 0, 0))
     const { viewport } = useThree()
     const waveRef = useRef<THREE.Mesh>(null)
 
@@ -354,7 +354,7 @@ function CameraController({ phase }: { phase: Phase }) {
     return null
 }
 
-export default function SuperpositionScene({ track, phase, onCatSettled, onGateTrigger, gateActive, hasTransformed, onTransform, quizCorrect = null, showParticles = false, catRetreat = false }: SuperpositionSceneProps) {
+export default function SuperpositionScene({ track, phase, onCatSettled, hasTransformed, onTransform, quizCorrect = null, showParticles = false, catRetreat = false }: SuperpositionSceneProps) {
     const isQuiz = phase === 'quiz'
     return (
         <>

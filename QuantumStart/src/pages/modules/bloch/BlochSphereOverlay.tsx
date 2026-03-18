@@ -2,9 +2,9 @@
  * BlochSphereOverlay.tsx — HTML panels for Module 3 "Bloch Sphere"
  */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTypewriter } from '../../hooks/useTypewriter'
+import { useTypewriter } from '../../../hooks/useTypewriter'
 import styles from './BlochSphereOverlay.module.css'
 
 const BLUE_PANELS = [
@@ -53,7 +53,7 @@ export function BlochSphereOverlay({
 
     return (
         <>
-            <div className={styles.phasePill}>🔮 {phase.toUpperCase()}</div>
+            <div className={`${styles.phasePill} ${styles.phasePillVisible}`}>🔮 {phase.toUpperCase()}</div>
             <button className={styles.backBtn} onClick={() => navigate('/learn')}>← Hub</button>
 
             {phase === 'hook' && (
@@ -62,10 +62,12 @@ export function BlochSphereOverlay({
                     <h2 className={styles.trackHeadline}>Choose your learning path</h2>
                     <div className={styles.trackBtnRow}>
                         <button className={`${styles.trackBtn} ${styles.trackBtnBlue}`} onClick={() => onTrackSelect('blue')}>
-                            <div className={styles.pathSphere} /> Intuition
+                            <div className={styles.pathSphere} /> 
+                            <span>Intuition</span>
                         </button>
                         <button className={`${styles.trackBtn} ${styles.trackBtnAmber}`} onClick={() => onTrackSelect('amber')}>
-                            <div className={styles.pathSphere} /> Technical
+                            <div className={styles.pathSphere} /> 
+                            <span>Technical</span>
                         </button>
                     </div>
                 </div>
@@ -85,11 +87,11 @@ export function BlochSphereOverlay({
                         style={{ cursor: finished ? 'default' : 'pointer' }}
                     >
                         <p className={styles.lessonText}>
-                            {displayed}
+                            {displayed as string}
                             {!finished && <span className={styles.cursor}>▊</span>}
                         </p>
                     </div>
-                    {track === 'amber' && current.math && <code className={styles.lessonMath}>{current.math}</code>}
+                    {track === 'amber' && 'math' in current && current.math && <code className={styles.lessonMath}>{current.math}</code>}
                     
                     {/* LIVE MATH HUD */}
                     <div className={styles.mathHud}>
@@ -114,7 +116,10 @@ export function BlochSphereOverlay({
                         {QUIZ_QUESTIONS[0].answers.map((ans, i) => (
                             <button 
                                 key={i} 
-                                onClick={() => onQuizResult(ans.correct)}
+                                onClick={() => {
+                                    onQuizResult(ans.correct)
+                                    if (ans.correct) onQuizComplete()
+                                }}
                                 className={styles.quizOption}
                             >
                                 {ans.label}
