@@ -3,7 +3,6 @@
  */
 
 import { useState } from 'react'
-import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import { useNavigate } from 'react-router-dom'
 import { useTypewriter } from '../../../hooks/useTypewriter'
 import styles from './SuperpositionOverlay.module.css'
@@ -106,7 +105,7 @@ function LessonPanels({ track, panelsVisible, hasTransformed, onComplete, phase 
                             {!finished && <span className={styles.cursor}>▊</span>}
                         </p>
                     </div>
-                    {track === 'amber' && 'math' in current && current.math && <code className={styles.lessonMath}>{current.math}</code>}
+                    {track === 'amber' && 'math' in current && (current as any).math && <code className={styles.lessonMath}>{(current as any).math}</code>}
                     <button className={styles.nextBtn} onClick={handleNext}>{isLast ? 'Quiz →' : 'Next →'}</button>
                 </>
             )}

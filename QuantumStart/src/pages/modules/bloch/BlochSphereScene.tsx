@@ -2,9 +2,9 @@
  * BlochSphereScene.tsx — R3F scene for "Bloch Sphere"
  */
 
-import { useRef, useState, useEffect, useMemo } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Float, Sphere, Line, Html, Text, OrbitControls } from '@react-three/drei'
+import { useState, useEffect, useMemo } from 'react'
+import { useThree } from '@react-three/fiber'
+import { Sphere, Line, Text, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
 
 interface BlochSphereSceneProps {
@@ -22,10 +22,10 @@ interface BlochSphereSceneProps {
 const SPHERE_RADIUS = 3.5
 
 export default function BlochSphereScene({
-    track, phase, theta, phi, onStateChange, onCatSettled, quizCorrect, showParticles, catRetreat
+    track, phase, theta, phi, onStateChange, onCatSettled, showParticles
 }: BlochSphereSceneProps) {
-    const { camera } = useThree()
-    const vectorRef = useRef<THREE.Group>(null!)
+    const { camera: _ } = useThree()
+    // const vectorRef = useRef<THREE.Group>(null!)
     const [isDragging, setIsDragging] = useState(false)
 
     // Notify parent once on mount (cat is handled globally mostly, but we trigger settled signal)

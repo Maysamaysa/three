@@ -2,11 +2,13 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
 import { CatProvider, useCat } from './context/CatContext'
+import { ProgressProvider } from './context/ProgressContext'
 import QuantumCat from './models/quantum_cat'
 import ProceduralBackground from './models/procedural-background'
 import PageTransition from './components/PageTransition'
 import { Landing } from './pages/Landing'
 import { Learn } from './pages/Learn'
+import { Profile } from './pages/Profile'
 import { Playground } from './pages/Playground'
 import { TutorialChallenge } from './pages/TutorialChallenge'
 import { QubitModule } from './pages/modules/qubit/QubitModule'
@@ -83,6 +85,7 @@ function AppShell() {
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/learn" element={<Learn />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/learn/qubit" element={<QubitModule />} />
             <Route path="/learn/superposition" element={<SuperpositionModule />} />
             <Route path="/learn/bloch" element={<BlochSphereModule />} />
@@ -97,9 +100,11 @@ function AppShell() {
 
 function App() {
   return (
-    <CatProvider>
-      <AppShell />
-    </CatProvider>
+    <ProgressProvider>
+      <CatProvider>
+        <AppShell />
+      </CatProvider>
+    </ProgressProvider>
   )
 }
 

@@ -6,7 +6,7 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import * as THREE from 'three'
-import Koi_cat from '../../assets/koi_cat.glb'
+import Koi_cat from '../../../assets/koi_cat.glb'
 
 export type Phase = 'hook' | 'lesson' | 'quiz' | 'complete'
 export type Track = 'blue' | 'amber' | null
@@ -113,7 +113,7 @@ function SceneDimmer({ active }: { active: boolean }) {
 }
 
 // ─── H-GATE TUNNEL ───────────────────────────────────────────────────────────
-function HGate({ active }: { active: boolean }) {
+function HGate({ active: _ }: { active: boolean }) {
     const group = useRef<THREE.Group>(null)
     const field = useRef<THREE.Mesh>(null)
 

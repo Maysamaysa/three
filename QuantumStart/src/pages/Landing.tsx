@@ -36,13 +36,6 @@ export function Landing() {
         setTimeout(() => navigate('/learn'), 350)
     }
 
-    const handleTrackSelect = (track: 'blue' | 'amber', route: string) => {
-        setQubitState(track)
-        setCatPosition('corner')
-        setMode('npc')
-        // Small delay so the cat starts animating before the page switches
-        setTimeout(() => navigate(route), 350)
-    }
 
     return (
         <section

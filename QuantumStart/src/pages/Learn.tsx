@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Suspense, useRef, useState, useEffect, useMemo } from 'react'
+import React, { Suspense, useRef, useState, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import { Html } from '@react-three/drei'
 import styles from './Learn.module.css'
 import { useCat } from '../context/CatContext'
+import { useProgress } from '../context/ProgressContext'
 import { useTypewriter } from '../hooks/useTypewriter'
 
 
@@ -23,10 +24,9 @@ interface Module {
     qubitBlue: string
     qubitAmber: string
     route: string
-    locked: boolean
 }
 
-const MODULES: Module[] = [
+const MODULE_DATA: Module[] = [
     {
         id: 'qubit',
         name: 'What is a Qubit?',
@@ -38,7 +38,6 @@ const MODULES: Module[] = [
         qubitBlue: "Imagine a coin spinning in the air — it's neither heads nor tails until it lands. That's your qubit. The universe's way of saying 'why choose?'",
         qubitAmber: "A qubit is a two-level quantum system represented as |ψ⟩ = α|0⟩ + β|1⟩, where α and β are complex amplitudes satisfying |α|² + |β|² = 1.",
         route: '/learn/qubit',
-        locked: false,
     },
     {
         id: 'superposition',
@@ -51,7 +50,6 @@ const MODULES: Module[] = [
         qubitBlue: "Being in two places at once isn't magic — it's superposition. A qubit holds all possible answers simultaneously... until you dare to look.",
         qubitAmber: "Superposition is a linear combination of basis states. The Hadamard gate H maps |0⟩ → (|0⟩+|1⟩)/√2, placing the qubit in equal superposition.",
         route: '/learn/superposition',
-        locked: false,
     },
     {
         id: 'bloch',
@@ -64,7 +62,6 @@ const MODULES: Module[] = [
         qubitBlue: "Picture a snow globe — every point on its surface is a valid quantum state. The north pole is |0⟩, the south is |1⟩, and everywhere else? Pure magic.",
         qubitAmber: "The Bloch sphere maps qubit states to unit vectors: |ψ⟩ = cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩. Rotations on this sphere correspond to quantum gate operations.",
         route: '/learn/bloch',
-        locked: false,
     },
     {
         id: 'gates',
@@ -77,7 +74,6 @@ const MODULES: Module[] = [
         qubitBlue: "Quantum gates are like dance moves for qubits — they flip, rotate, and entangle. The Hadamard gate is the moonwalk of the quantum world.",
         qubitAmber: "Quantum gates are unitary matrices. X = [[0,1],[1,0]], H = [[1,1],[1,-1]]/√2. Their unitarity ensures reversibility: UU† = I.",
         route: '/learn/gates',
-        locked: true,
     },
     {
         id: 'measurement',
@@ -90,7 +86,6 @@ const MODULES: Module[] = [
         qubitBlue: "The moment you look at a qubit, the universe makes a decision. Superposition collapses into a single reality. You are the Observer. Choose carefully.",
         qubitAmber: "Measurement projects the state onto a basis. For |ψ⟩ = α|0⟩ + β|1⟩, P(0) = |α|², P(1) = |β|². Post-measurement state collapses irreversibly.",
         route: '/learn/measurement',
-        locked: true,
     },
     {
         id: 'entanglement',
@@ -103,7 +98,6 @@ const MODULES: Module[] = [
         qubitBlue: "Two qubits, separated by galaxies, yet one knows what the other felt the instant you measured it. Einstein called it spooky. I call it my favourite trick.",
         qubitAmber: "Bell states are maximally entangled: |Φ⁺⟩ = (|00⟩+|11⟩)/√2. CNOT + Hadamard creates entanglement. Measuring one qubit instantly determines its partner.",
         route: '/learn/entanglement',
-        locked: true,
     },
     {
         id: 'algorithms',
@@ -116,7 +110,6 @@ const MODULES: Module[] = [
         qubitBlue: "A quantum computer doesn't try every answer — it makes all wrong answers cancel out, leaving only the right one standing. It's interference, not magic.",
         qubitAmber: "Grover's algorithm achieves O(√N) search via amplitude amplification. Shor's factors N in O((log N)³) using QFT-based period finding. Classical: O(e^N^(1/3)).",
         route: '/learn/algorithms',
-        locked: true,
     },
 ]
 
@@ -353,11 +346,12 @@ interface ModuleCardProps {
     selected: boolean
     dimmed: boolean
     anySelected: boolean
+    locked: boolean
     onSelect: (id: string) => void
     orbitRotation: number
 }
 
-function ModuleCard({ module, index, total, selected, dimmed, anySelected, onSelect, orbitRotation }: ModuleCardProps) {
+function ModuleCard({ module, index, total, selected, dimmed, anySelected, locked, onSelect, orbitRotation }: ModuleCardProps) {
     const groupRef = useRef<THREE.Group>(null)
     const globeRef = useRef<THREE.Mesh>(null)
     const [hovered, setHovered] = useState(false)
@@ -445,17 +439,17 @@ function ModuleCard({ module, index, total, selected, dimmed, anySelected, onSel
 
     {/* ── HTML card below the globe ── */ }
     <Html
-                center
-    position = { [0, -0.78, 0]}
-    style = {{ pointerEvents: dimmed ? 'none' : 'auto' }
+ center
+ position = { [0, -0.78, 0]}
+ style = {{ pointerEvents: dimmed ? 'none' : 'auto' }
 }
 zIndexRange = { [10, 0]}
     >
     <div
-                    onPointerEnter={ () => setHovered(true) }
-onPointerLeave = {() => setHovered(false)}
-onClick = {() => !module.locked && onSelect(module.id)}
-style = {{
+ onPointerEnter={ () => setHovered(true) }
+ onPointerLeave = {() => setHovered(false)}
+ onClick = {() => !locked && onSelect(module.id)}
+ style = {{
     width: '148px',
         background: selected
             ? 'rgba(20,21,35,0.90)'
@@ -471,7 +465,7 @@ style = {{
                             : '1px solid rgba(248,249,255,0.15)',
                         borderRadius: '18px',
                             padding: '11px 13px 12px',
-                                cursor: module.locked ? 'not-allowed' : 'pointer',
+                                cursor: locked ? 'not-allowed' : 'pointer',
                                     opacity: dimmed ? 0.35 : 1,
                                         transition: 'all 0.25s ease',
                                             boxShadow: selected
@@ -484,7 +478,7 @@ style = {{
                 >
     {/* Lock overlay */ }
 {
-    module.locked && (
+    locked && (
         <div style={
             {
                 position: 'absolute', inset: 0, borderRadius: '18px',
@@ -521,10 +515,11 @@ style = {{
 // ─── ORBIT RING — slowly rotates all module cards around the cat ─────────────
 interface OrbitRingProps {
     selectedId: string | null
-    onSelect: (id: string, track: Track) => void
+    onSelect: (id: string) => void
 }
 
 function OrbitRing({ selectedId, onSelect }: OrbitRingProps) {
+    const { isModuleLocked } = useProgress()
     const anySelected = selectedId !== null
     const [rotation, setRotation] = useState(0)
     const persistentRotationRef = useRef(0)
@@ -540,18 +535,19 @@ function OrbitRing({ selectedId, onSelect }: OrbitRingProps) {
     return (
         <group>
         {
-            MODULES.map((mod, i) => (
+            MODULE_DATA.map((mod, i) => (
                 <ModuleCard
-                    key= { mod.id }
-                    module = { mod }
-                    index = { i }
-                    total = { MODULES.length }
-                    selected = { selectedId === mod.id}
-                    dimmed = { anySelected && selectedId !== mod.id
+ key= { mod.id }
+ module = { mod }
+ index = { i }
+ total = { MODULE_DATA.length }
+ selected = { selectedId === mod.id}
+ dimmed = { anySelected && selectedId !== mod.id
 }
-anySelected = { anySelected }
-onSelect = {(id) => onSelect(id)}
-orbitRotation = { rotation }
+ anySelected = { anySelected }
+ locked = { isModuleLocked(mod.id) }
+ onSelect = {(id) => onSelect(id)}
+ orbitRotation = { rotation }
     />
             ))}
 </group>
@@ -562,6 +558,7 @@ orbitRotation = { rotation }
 export function Learn() {
     const navigate = useNavigate()
     const { setMode, setCatPosition, setQubitState: setCatQubit } = useCat()
+    const { isModuleLocked } = useProgress()
     const [selectedId, setSelectedId] = useState<string | null>(null)
     const [dialogueText, setDialogueText] = useState('')
     const [confirming, setConfirming] = useState(false)
@@ -573,7 +570,7 @@ export function Learn() {
         setCatQubit('idle')
     }, [setMode, setCatPosition, setCatQubit])
 
-    const selectedModule = MODULES.find(m => m.id === selectedId) ?? null
+    const selectedModule = MODULE_DATA.find(m => m.id === selectedId) ?? null
 
     const { displayed, finished, skip } = useTypewriter(
         dialogueText, 35, !!dialogueText
@@ -581,8 +578,8 @@ export function Learn() {
 
     // When a card is selected
     const handleSelect = (id: string) => {
-        const mod = MODULES.find(m => m.id === id)
-        if (!mod || mod.locked) return
+        const mod = MODULE_DATA.find(m => m.id === id)
+        if (!mod || isModuleLocked(id)) return
 
         setSelectedId(id)
         setConfirming(false)
@@ -611,11 +608,11 @@ export function Learn() {
 }>
     {/* ── 3D Canvas (orbit ring only — cat is global at center) ── */ }
     < Canvas
-className = { styles.canvas }
-camera = {{ position: [0, 0, 13], fov: 58 }}
-gl = {{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-dpr = { [1, 2]}
-style = {{ background: 'transparent' }}
+ className = { styles.canvas }
+ camera = {{ position: [0, 0, 13], fov: 58 }}
+ gl = {{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+ dpr = { [1, 2]}
+ style = {{ background: 'transparent' }}
             >
     <Suspense fallback={ null }>
         <ambientLight intensity={ 1.2 } />
@@ -625,19 +622,17 @@ style = {{ background: 'transparent' }}
 
                         {/* Orbit ring of module cards rotating around the centered cat */ }
                         < OrbitRing
-selectedId = { selectedId }
-onSelect = { handleSelect }
+ selectedId = { selectedId }
+ onSelect = { handleSelect }
     />
     </Suspense>
     </Canvas>
 
-{/* ── Back button ── */ }
-<button
-                className={ styles.backBtn }
-onClick = {() => navigate('/')}
-            >
-                ← Back
-    </button>
+    {/* ── Global Nav ── */}
+    <div className={ styles.globalNav }>
+        <button className={ styles.navBtn } onClick = {() => navigate('/')} > ← Landing </button>
+        <button className={ styles.navBtn } onClick = {() => navigate('/profile')} > Observer Profile 👤 </button>
+    </div>
 
 {/* ── Module Intro Overlay ── */ }
 {
@@ -648,20 +643,20 @@ onClick = {() => navigate('/')}
 
         < div className = { styles.dialogueHeader } >
             <div className={ styles.moduleSubtitle }>
-                MODULE { MODULES.findIndex(m => m.id === selectedId) + 1 }
+                MODULE { MODULE_DATA.findIndex(m => m.id === selectedId) + 1 }
 </div>
     < h2 className = { styles.moduleTitle } > { selectedModule?.name } </h2>
         </div>
 
         < div
-className = { styles.dialogueBubble }
-onClick = {() => !finished && skip()}
-style = {{ cursor: finished ? 'default' : 'pointer' }}
+ className = { styles.dialogueBubble }
+ onClick = {() => !finished && skip()}
+ style = {{ cursor: finished ? 'default' : 'pointer' }}
                     >
-    <p className={ styles.dialogueText }>
-        { displayed }
-{ !finished && <span className={ styles.cursor }>▊</span> }
-</p>
+                        <p className={styles.lessonText}>
+                            {displayed as string}
+                            {!finished && <span className={styles.cursor}>▊</span>}
+                        </p>
     </div>
 
 {

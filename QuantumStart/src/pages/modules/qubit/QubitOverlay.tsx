@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTypewriter } from '../../hooks/useTypewriter'
+import { useTypewriter } from '../../../hooks/useTypewriter'
 import styles from './QubitOverlay.module.css'
 import type { Track, Phase } from './QubitScene'
 
@@ -133,13 +133,13 @@ function LessonPanels({ track, panelsVisible, onComplete }: { track: Track; pane
         style={{ cursor: finished ? 'default' : 'pointer' }}
     >
         <p className={styles.lessonText}>
-            {displayed}
+            {displayed as string}
             {!finished && <span className={styles.cursor}>▊</span>}
         </p>
     </div>
 {
-    track === 'amber' && 'math' in current && current.math && (
-        <code className={ styles.lessonMath }> { current.math } </code>
+    track === 'amber' && 'math' in current && (current as any).math && (
+        <code className={ styles.lessonMath }> { (current as any).math } </code>
             )
 }
 {

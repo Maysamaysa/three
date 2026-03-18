@@ -194,7 +194,7 @@ function BurstEmitter({ active, color }: BurstEmitterProps) {
     if (!active && !started.current) return null
 
     return (
-        <instancedMesh ref={meshRef} args={[undefined, undefined, COUNT]}>
+        <instancedMesh ref={meshRef} args={[null as any, null as any, COUNT]}>
             <icosahedronGeometry args={[1, 0]} />
             <meshStandardMaterial
                 emissive={color}
@@ -408,7 +408,7 @@ function KoiCat({ onAnimationComplete, qubitState = 'idle', startAwake = false }
     const animProgressRef = useRef(startAwake ? 1 : 0)
     const [isAwake, setIsAwake] = useState(startAwake)
     const awakeProgressRef = useRef(startAwake ? 1 : 0)
-    const [isHovered, setIsHovered] = useState(false)
+    const [_isHovered, setIsHovered] = useState(false)
     const [clickCount, setClickCount] = useState(0)
     const [shakeTime, setShakeTime] = useState(0)
 

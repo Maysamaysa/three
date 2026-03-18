@@ -5,13 +5,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
-import { useCat } from '../../context/CatContext'
-import { useCatNPCTransition } from '../../hooks/useCatNPCTransition'
+import { useCat } from '../../../context/CatContext'
+import { useProgress } from '../../../context/ProgressContext'
+import { useCatNPCTransition } from '../../../hooks/useCatNPCTransition'
 import BlochSphereScene from './BlochSphereScene'
 import { BlochSphereOverlay } from './BlochSphereOverlay'
 
 export function BlochSphereModule() {
     const { setMode, setCatPosition, setQubitState } = useCat()
+    const { completeModule, unlockBadge } = useProgress()
 
     const [phase, setPhase] = useState<'hook' | 'lesson' | 'quiz' | 'complete'>('hook')
     const [track, setTrack] = useState<'blue' | 'amber' | null>(null)
@@ -21,6 +23,10 @@ export function BlochSphereModule() {
     // Bloch state: theta (0 to PI), phi (0 to 2PI)
     const [theta, setTheta] = useState(0)
     const [phi, setPhi] = useState(0)
+
+    // Track visited cardinal states for "Bloch Sphere Navigator" badge
+    const [, setVisitedStates] = useState<Set<string>>(new Set())
+    
 
     const [quizCorrect, setQuizCorrect] = useState<boolean | null>(null)
     const [showParticles, setShowParticles] = useState(false)
@@ -59,7 +65,44 @@ export function BlochSphereModule() {
         }
     }, [])
 
-    const handleQuizComplete = useCallback(() => setPhase('complete'), [])
+    const handleQuizComplete = useCallback(() => {
+        setPhase('complete')
+        if (track) {
+            completeModule('bloch', track)
+        }
+    }, [completeModule, track])
+
+    const handleStateChange = useCallback((t: number, p: number) => {
+        setTheta(t)
+        setPhi(p)
+
+        // Check for cardinal states (with small epsilon for float precision)
+        const EPS = 0.1
+        let stateKey = ''
+        
+        if (Math.abs(t) < EPS) stateKey = '0'
+        else if (Math.abs(t - Math.PI) < EPS) stateKey = '1'
+        else if (Math.abs(t - Math.PI/2) < EPS) {
+            // On equator
+            // Phi normalization: map to [0, 2PI)
+            const normPhi = ((p % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)
+            if (Math.abs(normPhi) < EPS || Math.abs(normPhi - Math.PI * 2) < EPS) stateKey = '+'
+            else if (Math.abs(normPhi - Math.PI) < EPS) stateKey = '-'
+            else if (Math.abs(normPhi - Math.PI/2) < EPS) stateKey = 'i+'
+            else if (Math.abs(normPhi - Math.PI * 1.5) < EPS) stateKey = 'i-'
+        }
+
+        if (stateKey) {
+            setVisitedStates(prev => {
+                if (prev.has(stateKey)) return prev
+                const next = new Set(prev).add(stateKey)
+                if (next.size === 6) {
+                    unlockBadge('bloch_navigator')
+                }
+                return next
+            })
+        }
+    }, [unlockBadge])
 
     return (
         <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', pointerEvents: 'auto' }}>
@@ -75,7 +118,7 @@ export function BlochSphereModule() {
                         phase={phase}
                         theta={theta}
                         phi={phi}
-                        onStateChange={(t, p) => { setTheta(t); setPhi(p); }}
+                        onStateChange={handleStateChange}
                         onCatSettled={handleCatSettled}
                         quizCorrect={quizCorrect}
                         showParticles={showParticles}

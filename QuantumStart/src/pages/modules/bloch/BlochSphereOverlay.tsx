@@ -91,7 +91,7 @@ export function BlochSphereOverlay({
                             {!finished && <span className={styles.cursor}>▊</span>}
                         </p>
                     </div>
-                    {track === 'amber' && 'math' in current && current.math && <code className={styles.lessonMath}>{current.math}</code>}
+                    {track === 'amber' && 'math' in current && (current as any).math && <code className={styles.lessonMath}>{(current as any).math}</code>}
                     
                     {/* LIVE MATH HUD */}
                     <div className={styles.mathHud}>

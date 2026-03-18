@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import Koi_cat from '../assets/koi_cat.glb'
 import type { CatMode, CatPosition, QubitState } from '../context/CatContext'
+import { useProgress } from '../context/ProgressContext'
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const COLOR = {
@@ -348,9 +349,12 @@ export default function QuantumCat({
     const posGroup = useRef<THREE.Group>(null)
     const catGroup = useRef<THREE.Group>(null)
 
-    // QuantumCat is a global singleton — safe to use rawScene directly (no clone needed)
+    // QuantumCat is a global singleton — safe    // catGroup → inner: scale lerp + rotation + animations
     const { scene, animations } = useGLTF(Koi_cat)
     const { actions, mixer } = useAnimations(animations, catGroup)
+
+    const { unlockBadge } = useProgress()
+    const secretClicks = useRef(0)
 
     // ── hero-mode state ──
     const [isAwake, setIsAwake] = useState(mode !== 'hero')
@@ -565,6 +569,13 @@ export default function QuantumCat({
 scale = { SLOT[catPosition].scale }
 onPointerOver = {() => { if (mode === 'hero') document.body.style.cursor = 'pointer' }}
 onPointerOut = {() => { document.body.style.cursor = '' }}
+onPointerDown = {(e) => {
+    e.stopPropagation()
+    secretClicks.current += 1
+    if (secretClicks.current === 7) {
+        unlockBadge('qubit_equal')
+    }
+}}
             >
     <SparkleRing color={ ringColor } intensity = { ringIntensity } count = { inCorner? 20: 36 } />
         <BurstEmitter active={ burstActive } color = { ringColor } />

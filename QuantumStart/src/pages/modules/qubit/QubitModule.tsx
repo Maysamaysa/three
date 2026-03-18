@@ -6,14 +6,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
-import { useCat } from '../../context/CatContext'
-import { useCatNPCTransition } from '../../hooks/useCatNPCTransition'
+import { useCat } from '../../../context/CatContext'
+import { useProgress } from '../../../context/ProgressContext'
+import { useCatNPCTransition } from '../../../hooks/useCatNPCTransition'
 import QubitScene from './QubitScene'
 import { QubitOverlay } from './QubitOverlay'
 import type { Phase, Track } from './QubitScene'
 
 export function QubitModule() {
     const { setMode, setCatPosition, setQubitState } = useCat()
+    const { completeModule } = useProgress()
 
     const [phase, setPhase] = useState<Phase>('hook')
     const [track, setTrack] = useState<Track>(null)
@@ -55,7 +57,12 @@ export function QubitModule() {
         else setCatRetreat(false)
     }, [])
 
-    const handleQuizComplete = useCallback(() => setPhase('complete'), [])
+    const handleQuizComplete = useCallback(() => {
+        setPhase('complete')
+        if (track) {
+            completeModule('qubit', track)
+        }
+    }, [completeModule, track])
 
     const handleSphereClick = useCallback(() => {
         if (phase === 'quiz') setSphereClicked(true)

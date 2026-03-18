@@ -5,14 +5,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
-import { useCat } from '../../context/CatContext'
-import { useCatNPCTransition } from '../../hooks/useCatNPCTransition'
+import { useCat } from '../../../context/CatContext'
+import { useProgress } from '../../../context/ProgressContext'
+import { useCatNPCTransition } from '../../../hooks/useCatNPCTransition'
 import SuperpositionScene from './SuperpositionScene'
 import { SuperpositionOverlay } from './SuperpositionOverlay'
 import type { Phase, Track } from './SuperpositionScene'
 
 export function SuperpositionModule() {
     const { setMode, setCatPosition, setQubitState } = useCat()
+    const { completeModule } = useProgress()
 
     const [phase, setPhase] = useState<Phase>('hook')
     const [track, setTrack] = useState<Track>(null)
@@ -24,6 +26,7 @@ export function SuperpositionModule() {
     const [quizCorrect, setQuizCorrect] = useState<boolean | null>(null)
     const [showParticles, setShowParticles] = useState(false)
     const [catRetreat, setCatRetreat] = useState(false)
+    const [perfectScore, setPerfectScore] = useState(true)
 
     // Configure global cat for this page
     useEffect(() => {
@@ -44,10 +47,12 @@ export function SuperpositionModule() {
     const handleLessonComplete = useCallback(() => {
         setPhase('quiz')
         setQuizCorrect(null)
+        setPerfectScore(true)
     }, [])
 
     const handleQuizResult = useCallback((correct: boolean) => {
         setQuizCorrect(correct)
+        if (!correct) setPerfectScore(false)
         setShowParticles(true)
         setTimeout(() => setShowParticles(false), 1800)
         if (!correct) { 
@@ -58,7 +63,12 @@ export function SuperpositionModule() {
         }
     }, [])
 
-    const handleQuizComplete = useCallback(() => setPhase('complete'), [])
+    const handleQuizComplete = useCallback(() => {
+        setPhase('complete')
+        if (track) {
+            completeModule('superposition', track, perfectScore)
+        }
+    }, [completeModule, track, perfectScore])
 
     const handleGateTrigger = useCallback(() => {
         setGateActive(true)

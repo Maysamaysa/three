@@ -15,8 +15,8 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useAnimations, Html, Text } from '@react-three/drei'
 import * as THREE from 'three'
-import Koi_cat from '../../assets/koi_cat.glb'
-import { color } from 'three/tsl'
+import Koi_cat from '../../../assets/koi_cat.glb'
+// import { color } from 'three/tsl'
 
 export type Phase = 'hook' | 'lesson' | 'quiz' | 'complete'
 export type Track = 'blue' | 'amber' | null
@@ -64,10 +64,10 @@ function SceneDimmer({ active }: { active: boolean }) {
         mat.opacity += (target - mat.opacity) * delta * 3
     })
     return (
-        <mesh ref= { meshRef } position = { [0, 0, 1]} renderOrder = { 10} >
-            <planeGeometry args={ [100, 100] } />
-                < meshBasicMaterial color = "#080912" transparent opacity = { 0} depthTest = { false} />
-                    </mesh>
+        <mesh ref={meshRef} position={[0, 0, 1]} renderOrder={10}>
+            <planeGeometry args={[100, 100]} />
+            <meshBasicMaterial color="#080912" transparent opacity={0} depthTest={false} />
+        </mesh>
     )
 }
 
@@ -350,10 +350,10 @@ function LotusParticleBurst({ active, color }: { active: boolean; color: string 
     })
     if (!active && !running.current) return null
     return (
-        <instancedMesh ref= { meshRef } args = { [undefined, undefined, COUNT]} >
-            <octahedronGeometry args={ [1, 0] } />
-                < meshStandardMaterial emissive = { threeColor } emissiveIntensity = { 2.5} transparent opacity = { 0.9} />
-                    </instancedMesh>
+        <instancedMesh ref={meshRef} args={[undefined, undefined, COUNT]}>
+            <octahedronGeometry args={[1, 0]} />
+            <meshStandardMaterial emissive={threeColor} emissiveIntensity={2.5} transparent opacity={0.9} />
+        </instancedMesh>
     )
 }
 
