@@ -225,7 +225,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     }, [])
 
     const isModuleLocked = useCallback((moduleId: string) => {
-        const moduleOrder = ['qubit', 'superposition', 'bloch', 'gates', 'measurement', 'entanglement', 'algorithms']
+        const moduleOrder = ['qubit', 'superposition', 'bloch', 'measurement', 'entanglement', 'gates', 'algorithms']
         const index = moduleOrder.indexOf(moduleId)
         if (index <= 0) return false // First module never locked
         

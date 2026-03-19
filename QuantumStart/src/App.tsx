@@ -14,6 +14,8 @@ import { TutorialChallenge } from './pages/TutorialChallenge'
 import { QubitModule } from './pages/modules/qubit/QubitModule'
 import { SuperpositionModule } from './pages/modules/superposition/SuperpositionModule'
 import { BlochSphereModule } from './pages/modules/bloch/BlochSphereModule'
+import { MeasurementModule } from './pages/modules/measurement/MeasurementModule'
+import { GatesModule } from './pages/modules/gates/GatesModule'
 import './App.css'
 
 // ─── GLOBAL CAT CANVAS ────────────────────────────────────────────────────────
@@ -89,6 +91,8 @@ function AppShell() {
             <Route path="/learn/qubit" element={<QubitModule />} />
             <Route path="/learn/superposition" element={<SuperpositionModule />} />
             <Route path="/learn/bloch" element={<BlochSphereModule />} />
+            <Route path="/learn/measurement" element={<MeasurementModule />} />
+            <Route path="/learn/gates" element={<GatesModule />} />
             <Route path="/playground" element={<Playground />} />
             <Route path="/tutorial/:id" element={<TutorialChallenge />} />
           </Routes>

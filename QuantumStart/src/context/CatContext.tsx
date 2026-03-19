@@ -5,7 +5,8 @@ export type QubitState = 'idle' | 'blue' | 'amber'
 export type CatMode = 'hero' | 'npc'
 // 'center'  → Landing page (cat is large and centered)
 // 'corner'  → Learn / Playground (cat floats to top-right, shrinks)
-export type CatPosition = 'center' | 'corner'
+// 'hidden'  → Used for modules where the cat should not be displayed
+export type CatPosition = 'center' | 'corner' | 'hidden'
 
 interface CatContextValue {
     mode: CatMode

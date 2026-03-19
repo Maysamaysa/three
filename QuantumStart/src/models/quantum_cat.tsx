@@ -19,6 +19,7 @@ const COLOR = {
 const SLOT: Record<CatPosition, { pos: THREE.Vector3; scale: number }> = {
     center: { pos: new THREE.Vector3(0, -0.4, 0), scale: 2.5 },
     corner: { pos: new THREE.Vector3(2.6, 1.8, 0), scale: 2 },
+    hidden: { pos: new THREE.Vector3(0, 0, 0), scale: 0 },
 }
 
 const TILT_CONFIG = {
@@ -515,7 +516,7 @@ export default function QuantumCat({
 
     return (
         // ─ posGroup: position lerp only — Html lives here, safe from scale distortion ─
-        <group ref= { posGroup } position = { SLOT[catPosition].pos.toArray() } >
+        <group ref= { posGroup } position = { SLOT[catPosition].pos.toArray() } visible={catPosition !== 'hidden'} >
 
             {/* Speech bubble */ }
             < SpeechBubble message = { bubbleMessage } drift = { bubbleDrift.current } yPos = { bubbleY } />
