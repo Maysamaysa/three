@@ -2,7 +2,7 @@
  * GatesScene.tsx — R3F scene for "Quantum Gates" Module 4
  */
 
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Sphere, Line, Text, Html } from '@react-three/drei'
 import * as THREE from 'three'
@@ -87,7 +87,7 @@ function Phase1Scene({ unlockedGates, selectedGate, onSelectGate, animState }: P
         } else {
             // Smoothly move out of the way to the top left when a gate is focused
             groupRef.current.position.lerp(new THREE.Vector3(-3, 2.5, -3), 0.05)
-            groupRef.current.rotation.lerp(new THREE.Euler(0, 0, 0), 0.05)
+            groupRef.current.quaternion.slerp(new THREE.Quaternion().identity(), 0.05)
         }
     })
 
@@ -132,7 +132,7 @@ function GateTile({ id, position, isUnlocked, isSelected, isDimmed, onClick }: a
             ref.current.rotation.y += 0.01
             ref.current.rotation.x = Math.sin(s.clock.getElapsedTime() * 2 + position[0]) * 0.1
         } else {
-            ref.current.rotation.lerp(new THREE.Euler(0, 0, 0), 0.1)
+            ref.current.quaternion.slerp(new THREE.Quaternion().identity(), 0.1)
         }
         
         const targetScale = isSelected ? 1.5 : hovered && isUnlocked && !isDimmed ? 1.2 : 1
@@ -209,7 +209,6 @@ function Phase2Scene({ challengeIdx, wireState1, wireState2, isEntangled }: Phas
 // --- MAIN SCENE ---
 interface GatesSceneProps {
     phase: GatePhase
-    onCatSettled: () => void
     unlockedGates: string[]
     // Shared state passed from Overlay
     selectedGate?: string | null
@@ -222,7 +221,7 @@ interface GatesSceneProps {
 }
 
 export default function GatesScene(props: GatesSceneProps) {
-    const { phase, onCatSettled, unlockedGates, selectedGate, onSelectGate, animState, challengeIdx, wireState1, wireState2, isEntangled } = props
+    const { phase, unlockedGates, selectedGate, onSelectGate, animState, challengeIdx, wireState1, wireState2, isEntangled } = props
 
     return (
         <group>

@@ -1,0 +1,218 @@
+.container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.phasePill {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 21, 35, 0.6);
+    border: 1px solid rgba(255, 183, 197, 0.3);
+    color: #FFB7C5;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    backdrop-filter: blur(12px);
+}
+
+.backBtn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: rgba(20, 21, 35, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #F8F9FF;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+}
+
+.sidebar {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    pointer-events: auto;
+}
+
+.instructionPanel {
+    background: rgba(20, 21, 35, 0.85);
+    border: 1px solid rgba(248, 249, 255, 0.12);
+    border-radius: 24px;
+    padding: 28px;
+    backdrop-filter: blur(24px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.stepText {
+    color: #5DA7DB;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.title {
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.6rem;
+    margin: 0 0 12px;
+}
+
+.description {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.btnRow {
+    display: flex;
+    gap: 12px;
+}
+
+.navBtn {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+.nextStepBtn {
+    background: linear-gradient(135deg, #FFB7C5, #ff8da6);
+    color: #111;
+}
+.nextStepBtn:hover { filter: brightness(1.1); }
+.nextStepBtn:disabled { background: #333; color: #555; cursor: not-allowed; filter: none; }
+
+.backStepBtn {
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+.backStepBtn:hover { background: rgba(255,255,255,0.1); }
+.backStepBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.measureBtn {
+    width: 100%;
+    padding: 20px 0;
+    border-radius: 16px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: linear-gradient(135deg, #5DA7DB, #3a7caf);
+    color: white;
+    border: none;
+    box-shadow: 0 0 20px rgba(93, 167, 219, 0.4);
+    transition: transform 0.2s;
+    margin-bottom: 12px;
+}
+.measureBtn:hover { transform: scale(1.02); }
+
+.entangleBtn {
+    width: 100%;
+    padding: 20px 0;
+    border-radius: 16px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: linear-gradient(135deg, #FFB7C5, #ff8da6);
+    color: #111;
+    border: none;
+    box-shadow: 0 0 20px rgba(255, 183, 197, 0.4);
+    transition: transform 0.2s;
+    margin-bottom: 12px;
+}
+.entangleBtn:hover { transform: scale(1.02); }
+
+.optionBtn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.optionBtn:hover { background: rgba(255,255,255,0.2); }
+
+.histogram {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    height: 100px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.barCol {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.barContainer {
+    width: 100%;
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+}
+
+.barFill00 { background: #5DA7DB; width: 100%; border-radius: 4px; transition: height 0.1s; }
+.barFill11 { background: #A67B5B; width: 100%; border-radius: 4px; transition: height 0.1s; }
+.barFillOther { background: #888; width: 100%; border-radius: 4px; transition: height 0.1s; }
+
+.barLabel { color: white; font-family: 'Space Mono', monospace; font-size: 0.8rem; font-weight: bold; margin-top: 4px; }
+.barCount { position: absolute; bottom: 5px; width: 100%; text-align: center; color: #111; font-weight: bold; font-size: 0.8rem; }
+
+.quizOption {
+    padding: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: .2s;
+    font-size: 0.95rem;
+}
+.quizOption:hover { background: rgba(255,183,197,0.2); border-color: rgba(255,183,197,0.5); transform: translateX(5px); }
+
+.detectiveGrid {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.detectiveBtn {
+    flex: 1;
+    padding: 16px 0;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid transparent;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+.detectiveBtn.selected { background: rgba(255,183,197,0.2); border-color: #FFB7C5; }

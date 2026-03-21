@@ -15,8 +15,7 @@ export function GatesModule() {
     const { completeModule } = useProgress()
 
     const [phase, setPhase] = useState<GatePhase>('phase1_intro')
-    const [catSettled, setCatSettled] = useState(false)
-    const { panelsVisible } = useCatNPCTransition(catSettled)
+    const { panelsVisible } = useCatNPCTransition(true)
 
     // Shared state for 3D and UI
     const [selectedGate, setSelectedGate] = useState<string | null>(null)
@@ -47,7 +46,6 @@ export function GatesModule() {
         setQubitState('idle')
     }, [setMode, setCatPosition, setQubitState])
 
-    const handleCatSettled = useCallback(() => setCatSettled(true), [])
 
     const handlePhaseComplete = useCallback((completedPhase: GatePhase) => {
         if (completedPhase === 'phase1_intro') setPhase('phase2_challenges')
@@ -70,7 +68,6 @@ export function GatesModule() {
                 <Suspense fallback={null}>
                     <GatesScene
                         phase={phase}
-                        onCatSettled={handleCatSettled}
                         unlockedGates={unlockedGates}
                         selectedGate={selectedGate}
                         onSelectGate={setSelectedGate}

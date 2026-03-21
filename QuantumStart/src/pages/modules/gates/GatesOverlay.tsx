@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './GatesOverlay.module.css'
 import type { GatePhase } from './GatesModule'
-import { GATES, applyGate1Q, applyCNOT, INITIAL_STATE, formatStateString, stateToBloch, isEntangled, tensorProduct } from './gateLogic'
-import type { State1Q, State2Q } from './gateLogic'
+import { GATES, applyGate1Q, INITIAL_STATE, formatStateString } from './gateLogic'
+import type { State1Q } from './gateLogic'
 
 interface GatesOverlayProps {
     panelsVisible: boolean
@@ -176,7 +176,7 @@ const CHALLENGES = [
     { text: "Challenge 3: Entangle two qubits", target: "Entangled", hint: "Put the first qubit in superposition, then use CNOT." }
 ]
 
-function Phase2Challenges({ challengeIdx, setChallengeIdx, wireState1, setWireState1, wireState2, setWireState2, setIsEntangled, onComplete }: any) {
+function Phase2Challenges({ challengeIdx, setChallengeIdx, wireState1, setWireState1, wireState2, setWireState2, isEntangled, setIsEntangled, onComplete }: any) {
     const [msg, setMsg] = useState(CHALLENGES[challengeIdx].hint)
     
     // reset states when challenge changes

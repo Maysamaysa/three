@@ -1,4 +1,3 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
 import styles from './Profile.module.css'

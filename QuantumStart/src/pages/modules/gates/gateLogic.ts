@@ -79,7 +79,6 @@ export function stateToBloch(state: State1Q): { theta: number, phi: number } {
     const bRot_i = br * Math.sin(-alphaPhase) + bi * Math.cos(-alphaPhase);
     
     const alphaMag = Math.sqrt(ar*ar + ai*ai);
-    const betaMag = Math.sqrt(br*br + bi*bi);
     
     const theta = 2 * Math.acos(Math.max(-1, Math.min(1, alphaMag)));
     const phi = Math.atan2(bRot_i, bRot_r);
