@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import styles from './MeasurementOverlay.module.css'
 import type { Basis, Phase } from './MeasurementModule'
+import { ModuleHeader } from '../../../components/ModuleHeader'
 
 interface Props {
     phase: Phase
@@ -235,9 +236,18 @@ export function MeasurementOverlay({
 
     return (
         <div className={styles.container}>
-            <div className={styles.phasePill}>MODULE 4 — Measurement</div>
-            <div className={styles.shotsCounter}>SHOTS: {shotsTaken}</div>
-            <button className={styles.backBtn} onClick={() => navigate('/learn')}>← Hub</button>
+        <ModuleHeader
+            moduleNumber={4}
+            moduleName="Measurement"
+            phases={['Concept', 'Collapse', 'Probability', 'Quiz']}
+            currentPhase={
+                phase === 'concept' ? 0
+                : phase === 'collapse' ? 1
+                : phase === 'sandbox' ? 2
+                : phase === 'quiz' ? 3
+                : 3
+            }
+        />
 
             <div className={styles.sidebar}>
                 {phase === 'concept' && renderConcept()}

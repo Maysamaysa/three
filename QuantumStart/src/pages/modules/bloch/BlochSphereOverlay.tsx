@@ -4,6 +4,7 @@
 
 import { useNavigate } from 'react-router-dom'
 import styles from './BlochSphereOverlay.module.css'
+import { ModuleHeader } from '../../../components/ModuleHeader'
 
 const STEPS = [
     {
@@ -44,7 +45,7 @@ const QUIZ = {
 }
 
 export function BlochSphereOverlay({
-    panelsVisible, step, theta, phi, onNext, onBack, onQuizResult
+    step, theta, phi, onNext, onBack, onQuizResult
 }: any) {
     const navigate = useNavigate()
 
@@ -66,10 +67,18 @@ export function BlochSphereOverlay({
 
     return (
         <>
-            <div className={`${styles.phasePill} ${panelsVisible ? styles.phasePillVisible : ''}`}>
-                MODULE 3 — The Bloch Sphere
-            </div>
-            <button className={styles.backBtn} onClick={() => navigate('/learn')}>← Hub</button>
+        <ModuleHeader
+            moduleNumber={3}
+            moduleName="The Bloch Sphere"
+            phases={['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5', 'Sandbox', 'Quiz']}
+            currentPhase={
+                step === 'sandbox' ? 5
+                : step === 'quiz' ? 6
+                : step === 'complete' ? 6
+                : typeof step === 'number' ? step - 1
+                : 0
+            }
+        />
 
             {/* SIDEBAR CONTAINER */}
             <div className={styles.sidebar}>

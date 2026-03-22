@@ -2,6 +2,7 @@ import styles from './AlgorithmsOverlay.module.css'
 import type { AlgoPhase } from './AlgorithmsModule'
 import { applyMatrix, getOracleMatrix, getDiffusionMatrix, type CircuitOp } from './circuitLogic'
 import { AlgorithmsBuilder } from './AlgorithmsBuilder'
+import { ModuleHeader } from '../../../components/ModuleHeader'
 
 interface AlgorithmsOverlayProps {
     phase: AlgoPhase
@@ -25,10 +26,16 @@ const H_TENSOR_H = [
 ]
 
 export function AlgorithmsOverlay({ phase, winningBox, guessedBox, qState = [], onApplyState, showAverage, setShowAverage, onComplete, panelsVisible, builderFeedback, onRunCircuit }: AlgorithmsOverlayProps) {
-    
+    const phaseIndex = phase === 'phase1_classical' ? 0 : phase === 'phase2_superposition' ? 1 : phase === 'phase3_oracle' ? 2 : phase === 'phase4_amplification' ? 3 : 4
     return (
-        <div style={{ pointerEvents: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10, display: 'flex', flexDirection: 'column', padding: '2rem' }}>
-            <div className={styles.topPanel} style={{ opacity: panelsVisible ? 1 : 0, transition: 'opacity 0.5s', pointerEvents: 'auto' }}>
+        <div style={{ pointerEvents: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10, display: 'flex', flexDirection: 'column' }}>
+            <ModuleHeader
+                moduleNumber={7}
+                moduleName="Quantum Algorithms"
+                phases={['Setup', 'Superposition', 'Oracle', 'Amplify', 'Build']}
+                currentPhase={phaseIndex}
+            />
+            <div className={styles.topPanel} style={{ opacity: panelsVisible ? 1 : 0, transition: 'opacity 0.5s', pointerEvents: 'auto', padding: '2rem', paddingTop: '80px' }}>
                 {phase === 'phase1_classical' && (
                     <>
                         <h1>Grover's Search: The Setup</h1>

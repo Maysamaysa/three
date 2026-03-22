@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTypewriter } from '../../../hooks/useTypewriter'
 import styles from './SuperpositionOverlay.module.css'
 import type { Track, Phase } from './SuperpositionScene'
+import { ModuleHeader } from '../../../components/ModuleHeader'
 
 const BLUE_PANELS = [
     { text: "Superposition is like a wave in a pool. It’s not in one spot; it’s spread across possibilities.", hint: "Watch the Hadamard machine pulsate." },
@@ -183,8 +184,7 @@ export function SuperpositionOverlay({
     const navigate = useNavigate()
     return (
         <>
-            <div className={styles.phasePill}>⚛️ {phase.toUpperCase()}</div>
-            <button className={styles.backBtn} onClick={() => navigate('/learn')}>← Hub</button>
+        <ModuleHeader moduleNumber={2} moduleName="Superposition" />
             {phase === 'hook' && (
                 <>
                     <TrackSelector onTrackSelect={onTrackSelect} />

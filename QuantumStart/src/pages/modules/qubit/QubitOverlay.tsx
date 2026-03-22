@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTypewriter } from '../../../hooks/useTypewriter'
 import styles from './QubitOverlay.module.css'
 import type { Track, Phase } from './QubitScene'
+import { ModuleHeader } from '../../../components/ModuleHeader'
 
 // ─── LESSON CONTENT ───────────────────────────────────────────────────────────
 const BLUE_PANELS = [
@@ -274,13 +275,9 @@ export interface QubitOverlayProps {
 }
 
 export function QubitOverlay({ panelsVisible, track, phase, onTrackSelect, onLessonComplete, onQuizComplete, onQuizResult, sphereClicked }: QubitOverlayProps) {
-    const navigate = useNavigate()
-    const PHASE_LABELS: Record<Phase, string> = { hook: 'MODULE 1', lesson: 'LESSON', quiz: 'QUIZ', complete: 'COMPLETE' }
     return (
         <>
-        <div className= {`${styles.phasePill} ${panelsVisible ? styles.phasePillVisible : ''}`
-}>⚛️ { PHASE_LABELS[phase] } </div>
-    < button className = { styles.backBtn } onClick = {() => navigate('/learn')}>← Hub </button>
+        <ModuleHeader moduleNumber={1} moduleName="What is a Qubit?" />
 {
     phase === 'hook' && (
         <>

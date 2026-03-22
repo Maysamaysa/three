@@ -1,0 +1,170 @@
+/* ModuleHeader.module.css — Shared top bar for all module pages */
+
+/* ─── CONTAINER ──────────────────────────────────────────────────────────────── */
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 14px 20px 12px;
+    /* Glassmorphism bar */
+    background: linear-gradient(
+        to bottom,
+        rgba(10, 10, 25, 0.72) 0%,
+        rgba(10, 10, 25, 0.0) 100%
+    );
+    backdrop-filter: blur(0px);
+    pointer-events: auto;
+}
+
+/* ─── LEFT — back button ─────────────────────────────────────────────────────── */
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 100px;
+    padding: 7px 14px 7px 10px;
+    color: rgba(248, 249, 255, 0.85);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(12px);
+    letter-spacing: 0.02em;
+    justify-self: start;
+}
+
+.backBtn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    transform: translateX(-1px);
+}
+
+.backArrow {
+    font-size: 15px;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+.backLabel {
+    line-height: 1;
+}
+
+/* ─── CENTER — module name ───────────────────────────────────────────────────── */
+.nameZone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    justify-self: center;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 100px;
+    padding: 8px 22px;
+    backdrop-filter: blur(16px);
+    box-shadow:
+        0 2px 20px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.moduleNum {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 183, 197, 0.75);
+    line-height: 1;
+}
+
+.moduleName {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #F8F9FF;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    line-height: 1.2;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* ─── RIGHT — phase nav ──────────────────────────────────────────────────────── */
+.phaseZone {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    justify-self: end;
+    min-width: 0;
+}
+
+.phaseNav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 100px;
+    padding: 7px 14px;
+    backdrop-filter: blur(12px);
+}
+
+/* Dots */
+.phaseDot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    transition: all 0.3s ease;
+    cursor: default;
+    flex-shrink: 0;
+}
+
+.phaseDotDone {
+    background: rgba(93, 167, 219, 0.6);
+    border-color: rgba(93, 167, 219, 0.7);
+}
+
+.phaseDotActive {
+    background: #FFB7C5;
+    border-color: #FFB7C5;
+    box-shadow: 0 0 8px rgba(255, 183, 197, 0.7);
+    transform: scale(1.35);
+}
+
+/* Tooltip on hover */
+.phaseDot:hover .phaseTooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.phaseTooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    background: rgba(10, 10, 25, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #F8F9FF;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.18s ease;
+    backdrop-filter: blur(8px);
+    z-index: 200;
+}

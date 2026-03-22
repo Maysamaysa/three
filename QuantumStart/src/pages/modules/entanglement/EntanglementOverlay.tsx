@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import styles from './EntanglementOverlay.module.css'
+import { ModuleHeader } from '../../../components/ModuleHeader'
 
 const STEPS = {
     concept: [
@@ -66,13 +67,18 @@ export function EntanglementOverlay({
 
     return (
         <div className={styles.container}>
-            <div className={styles.phasePill}>
-                MODULE 5 — Entanglement
-            </div>
-            
-            <button className={styles.backBtn} onClick={() => navigate('/learn')}>
-                ← Hub
-            </button>
+        <ModuleHeader
+            moduleNumber={5}
+            moduleName="Entanglement"
+            phases={['Concept', 'Collapse', 'Sandbox', 'Quiz']}
+            currentPhase={
+                phase === 'concept' ? 0
+                : phase === 'collapse' ? 1
+                : phase === 'sandbox' ? 2
+                : phase === 'quiz' ? 3
+                : 3
+            }
+        />
 
             <div className={styles.sidebar}>
                 {/* INSTRUCTION PANELS */}

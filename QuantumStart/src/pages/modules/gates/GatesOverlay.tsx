@@ -4,6 +4,7 @@ import styles from './GatesOverlay.module.css'
 import type { GatePhase } from './GatesModule'
 import { GATES, applyGate1Q, INITIAL_STATE, formatStateString } from './gateLogic'
 import type { State1Q } from './gateLogic'
+import { ModuleHeader } from '../../../components/ModuleHeader'
 
 interface GatesOverlayProps {
     panelsVisible: boolean
@@ -372,9 +373,16 @@ function GatesSummary() {
 
 export function GatesOverlay(props: GatesOverlayProps) {
     const { phase } = props
+    const phaseIndex = phase === 'phase1_intro' ? 0 : phase === 'phase2_challenges' ? 1 : phase === 'phase3_quiz' ? 2 : 2
 
     return (
         <div className={styles.overlayContainer} style={{ opacity: props.panelsVisible ? 1 : 0, transition: 'opacity 0.5s' }}>
+            <ModuleHeader
+                moduleNumber={6}
+                moduleName="Quantum Gates"
+                phases={['Explore', 'Challenges', 'Quiz']}
+                currentPhase={phaseIndex}
+            />
             {phase === 'phase1_intro' && <Phase1Intro {...props} onComplete={props.onPhaseComplete} />}
             {phase === 'phase2_challenges' && <Phase2Challenges {...props} onComplete={props.onPhaseComplete} />}
             {phase === 'phase3_quiz' && <Phase3Quiz {...props} onComplete={props.onPhaseComplete} />}
