@@ -5,28 +5,11 @@
  * Two qubits: [00_r, 00_i, 01_r, 01_i, 10_r, 10_i, 11_r, 11_i]
  */
 
+import { GATES } from '../../../config/gates';
+
 export type Complex = [number, number]; // [real, imag]
 export type State1Q = [number, number, number, number]; // [a_r, a_i, b_r, b_i]
 export type State2Q = [number, number, number, number, number, number, number, number];
-
-export const GATES = {
-    H: [
-        [1/Math.SQRT2, 0, 1/Math.SQRT2, 0],
-        [1/Math.SQRT2, 0, -1/Math.SQRT2, 0]
-    ],
-    X: [
-        [0, 0, 1, 0],
-        [1, 0, 0, 0]
-    ],
-    Y: [
-        [0, 0, 0, -1],
-        [0, 1, 0, 0]
-    ],
-    Z: [
-        [1, 0, 0, 0],
-        [0, 0, -1, 0]
-    ],
-};
 
 function complexMul(a: Complex, b: Complex): Complex {
     return [a[0]*b[0] - a[1]*b[1], a[0]*b[1] + a[1]*b[0]];

@@ -1,117 +1,15 @@
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
-import React, { Suspense, useRef, useState, useLayoutEffect, useMemo } from 'react'
+import React, { Suspense, useRef, useState, useEffect, useLayoutEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import { Html } from '@react-three/drei'
 import styles from './Learn.module.css'
 import { useCat } from '../context/CatContext'
 import { useProgress } from '../context/ProgressContext'
 import { useTypewriter } from '../hooks/useTypewriter'
-
-
-// ─── MODULE DATA ──────────────────────────────────────────────────────────────
-export type Track = 'blue' | 'amber'
-
-interface Module {
-    id: string
-    name: string
-    emoji: string
-    blueLabel: string
-    amberLabel: string
-    // Position angle on the orbit ring (radians)
-    angle: number
-    radius: number
-    qubitBlue: string
-    qubitAmber: string
-    route: string
-}
-
-const MODULE_DATA: Module[] = [
-    {
-        id: 'qubit',
-        name: 'What is a Qubit?',
-        emoji: '⚛️',
-        angle: 0,
-        radius: 1,
-        blueLabel: 'Intuition',
-        amberLabel: 'Technical',
-        qubitBlue: "Imagine a coin spinning in the air — it's neither heads nor tails until it lands. That's your qubit. The universe's way of saying 'why choose?'",
-        qubitAmber: "A qubit is a two-level quantum system represented as |ψ⟩ = α|0⟩ + β|1⟩, where α and β are complex amplitudes satisfying |α|² + |β|² = 1.",
-        route: '/learn/qubit',
-    },
-    {
-        id: 'superposition',
-        name: 'Superposition',
-        emoji: '🌊',
-        angle: (Math.PI * 2) / 7,
-        radius: 1,
-        blueLabel: 'Intuition',
-        amberLabel: 'Technical',
-        qubitBlue: "Being in two places at once isn't magic — it's superposition. A qubit holds all possible answers simultaneously... until you dare to look.",
-        qubitAmber: "Superposition is a linear combination of basis states. The Hadamard gate H maps |0⟩ → (|0⟩+|1⟩)/√2, placing the qubit in equal superposition.",
-        route: '/learn/superposition',
-    },
-    {
-        id: 'measurement',
-        name: 'Measurement',
-        emoji: '👁️',
-        angle: (Math.PI * 2 * 2) / 7,
-        radius: 1,
-        blueLabel: 'Intuition',
-        amberLabel: 'Technical',
-        qubitBlue: "The moment you look at a qubit, the universe makes a decision. Superposition collapses into a single reality. You are the Observer. Choose carefully.",
-        qubitAmber: "Measurement projects the state onto a basis. For |ψ⟩ = α|0⟩ + β|1⟩, P(0) = |α|², P(1) = |β|². Post-measurement state collapses irreversibly.",
-        route: '/learn/measurement',
-    },
-    {
-        id: 'bloch',
-        name: 'Bloch Sphere',
-        emoji: '🔮',
-        angle: (Math.PI * 2 * 3) / 7,
-        radius: 1,
-        blueLabel: 'Intuition',
-        amberLabel: 'Technical',
-        qubitBlue: "Picture a snow globe — every point on its surface is a valid quantum state. The north pole is |0⟩, the south is |1⟩, and everywhere else? Pure magic.",
-        qubitAmber: "The Bloch sphere maps qubit states to unit vectors: |ψ⟩ = cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩. Rotations on this sphere correspond to quantum gate operations.",
-        route: '/learn/bloch',
-    },
-    {
-        id: 'entanglement',
-        name: 'Entanglement',
-        emoji: '🔗',
-        angle: (Math.PI * 2 * 4) / 7,
-        radius: 1,
-        blueLabel: 'Intuition',
-        amberLabel: 'Technical',
-        qubitBlue: "Two qubits, separated by galaxies, yet one knows what the other felt the instant you measured it. Einstein called it spooky. I call it my favourite trick.",
-        qubitAmber: "Bell states are maximally entangled: |Φ⁺⟩ = (|00⟩+|11⟩)/√2. CNOT + Hadamard creates entanglement. Measuring one qubit instantly determines its partner.",
-        route: '/learn/entanglement',
-    },
-    {
-        id: 'gates',
-        name: 'Quantum Gates',
-        emoji: '🎛️',
-        angle: (Math.PI * 2 * 5) / 7,
-        radius: 1,
-        blueLabel: 'Intuition',
-        amberLabel: 'Technical',
-        qubitBlue: "Quantum gates are like dance moves for qubits — they flip, rotate, and entangle. The Hadamard gate is the moonwalk of the quantum world.",
-        qubitAmber: "Quantum gates are unitary matrices. X = [[0,1],[1,0]], H = [[1,1],[1,-1]]/√2. Their unitarity ensures reversibility: UU† = I.",
-        route: '/learn/gates',
-    },
-    {
-        id: 'algorithms',
-        name: 'Quantum Algorithms',
-        emoji: '⚡',
-        angle: (Math.PI * 2 * 6) / 7,
-        radius: 1,
-        blueLabel: 'Intuition',
-        amberLabel: 'Technical',
-        qubitBlue: "A quantum computer doesn't try every answer — it makes all wrong answers cancel out, leaving only the right one standing. It's interference, not magic.",
-        qubitAmber: "Grover's algorithm achieves O(√N) search via amplitude amplification. Shor's factors N in O((log N)³) using QFT-based period finding. Classical: O(e^N^(1/3)).",
-        route: '/learn/algorithms',
-    },
-]
+import { TRANSITION_CONFIG } from '../config/transitions'
+import { MODULE_DATA, type Track, type Module } from '../config/modules'
 
 // ─── PROCEDURAL 3D MODELS ─────────────────────────────────────────────────────
 
@@ -564,13 +462,16 @@ export function Learn() {
     const [confirming, setConfirming] = useState(false)
 
     // useLayoutEffect fires synchronously before paint, ensuring the cat
-    // is always restored to 'center' when navigating back from any module —
-    // even if that module's cleanup fires afterwards (which it won't in strict mode,
-    // but this guards against any race with PageTransition unmount timing).
-    useLayoutEffect(() => {
-        setMode('npc')
-        setCatPosition('center')
-        setCatQubit('idle')
+    // is always restored to 'center' when navigating back from any module.
+    // We now use a slight delay to sync with the page transition duration.
+    useEffect(() => {
+        const delay = (TRANSITION_CONFIG.page.duration * 1000) * 0.4;
+        const id = setTimeout(() => {
+            setMode('npc')
+            setCatPosition('center')
+            setCatQubit('idle')
+        }, delay)
+        return () => clearTimeout(id)
     }, [setMode, setCatPosition, setCatQubit])
 
     const selectedModule = MODULE_DATA.find(m => m.id === selectedId) ?? null
@@ -631,11 +532,20 @@ export function Learn() {
     </Suspense>
     </Canvas>
 
-    {/* ── Global Nav ── */}
-    <div className={ styles.globalNav }>
-        <button className={ styles.navBtn } onClick = {() => navigate('/')} > ← Landing </button>
-        <button className={ styles.navBtn } onClick = {() => navigate('/profile')} > Observer Profile 👤 </button>
-    </div>
+        {/* ── Global Nav ── */}
+        <motion.div 
+            className={ styles.globalNav }
+            initial={{ opacity: 0, y: TRANSITION_CONFIG.header.yOffset }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+                duration: TRANSITION_CONFIG.header.duration, 
+                delay: TRANSITION_CONFIG.header.delay, 
+                ease: TRANSITION_CONFIG.header.ease 
+            }}
+        >
+            <button className={ styles.navBtn } onClick = {() => navigate('/')} > ← Landing </button>
+            <button className={ styles.navBtn } onClick = {() => navigate('/profile')} > Observer Profile 👤 </button>
+        </motion.div>
 
 {/* ── Module Intro Overlay ── */ }
 {

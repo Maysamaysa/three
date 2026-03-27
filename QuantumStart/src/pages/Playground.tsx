@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { TRANSITION_CONFIG } from '../config/transitions';
 import { useCircuit } from '../hooks/useCircuit';
 import { useSimulator } from '../hooks/useSimulator';
 import { CircuitBuilder } from '../components/CircuitBuilder';
@@ -94,7 +96,16 @@ export function Playground() {
   {/* All interactive UI lives here, on top of the canvas */ }
   <div className={ styles.overlay }>
     {/* ── Top Bar ── */ }
-    < header className = { styles.topBar } >
+    < motion.header 
+        className = { styles.topBar } 
+        initial={{ opacity: 0, y: TRANSITION_CONFIG.header.yOffset }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+            duration: TRANSITION_CONFIG.header.duration, 
+            delay: TRANSITION_CONFIG.header.delay, 
+            ease: TRANSITION_CONFIG.header.ease 
+        }}
+    >
       <h1 className={ styles.topBarTitle }>
         Quantum < span > Playground </span>
         </h1>
@@ -103,7 +114,7 @@ export function Playground() {
             <Link to="/learn" className = { styles.topBarLink } >
             ← Back to Learn
     </Link>
-    </header>
+    </motion.header>
 
   {/* ── Two-column layout ── */ }
   <div className={ styles.grid }>

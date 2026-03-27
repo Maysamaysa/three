@@ -9,6 +9,7 @@ import * as THREE from 'three'
 import type { GatePhase } from './GatesModule'
 import { stateToBloch } from './gateLogic'
 import type { State1Q } from './gateLogic'
+import { GATES_INFO } from '../../../config/gates'
 
 // --- REUSABLE MINI BLOCH SPHERE ---
 interface MiniBlochSphereProps {
@@ -61,13 +62,6 @@ export function MiniBlochSphere({ position, state, scale = 1 }: MiniBlochSphereP
 }
 
 // --- GATE TILES (Phase 1) ---
-const GATES_INFO = [
-    { id: 'H', x: -4 },
-    { id: 'X', x: -2 },
-    { id: 'Y', x: 0 },
-    { id: 'Z', x: 2 },
-    { id: 'CNOT', x: 4 }
-]
 
 interface Phase1SceneProps {
     unlockedGates: string[]

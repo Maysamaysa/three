@@ -8,6 +8,7 @@
  */
 import { useEffect } from 'react'
 import { useCat } from '../context/CatContext'
+import { TRANSITION_CONFIG } from '../config/transitions'
 import type { CatPosition, QubitState } from '../context/CatContext'
 
 export function useModuleCatSetup(
@@ -17,12 +18,17 @@ export function useModuleCatSetup(
     const { setMode, setCatPosition, setQubitState } = useCat()
 
     useEffect(() => {
-        setMode('npc')
-        setCatPosition(position)
-        setQubitState(qubitState)
-        // No cleanup here — the next page (Learn) is responsible for
-        // setting its own cat state when it mounts. Cleaning up here
-        // caused a race where the module's cleanup overwrote Learn's mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        // Delay the cat state change slightly to sync with the page transition.
+        // This prevents the cat from 'jumping' or 'disappearing' while the 
+        // old page is still fading out.
+        const delay = (TRANSITION_CONFIG.page.duration * 1000) * 0.4;
+        
+        const id = setTimeout(() => {
+            setMode('npc')
+            setCatPosition(position)
+            setQubitState(qubitState)
+        }, delay)
+        
+        return () => clearTimeout(id)
+    }, [position, qubitState, setMode, setCatPosition, setQubitState])
 }

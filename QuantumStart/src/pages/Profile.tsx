@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useProgress } from '../context/ProgressContext'
+import { TRANSITION_CONFIG } from '../config/transitions'
 import styles from './Profile.module.css'
 
 export function Profile() {
@@ -22,7 +24,16 @@ export function Profile() {
 
     return (
         <div className= { styles.container } >
-        <header className={ styles.header }>
+        <motion.header 
+            className={ styles.header }
+            initial={{ opacity: 0, y: TRANSITION_CONFIG.header.yOffset }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+                duration: TRANSITION_CONFIG.header.duration, 
+                delay: TRANSITION_CONFIG.header.delay, 
+                ease: TRANSITION_CONFIG.header.ease 
+            }}
+        >
             <div className={ styles.titleSection }>
                 <h1>Observer Identity </h1>
                     < p > Tracking your quantum journey across the multiverse </p>
@@ -31,7 +42,7 @@ export function Profile() {
 }>
                     ← Learn Hub
     </button>
-    </header>
+    </motion.header>
 
     < main className = { styles.mainGrid } >
         {/* Left: Track Stats */ }

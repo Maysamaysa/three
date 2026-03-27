@@ -13,6 +13,8 @@
  *     currentPhase={step - 1} />
  */
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { TRANSITION_CONFIG } from '../config/transitions'
 import styles from './ModuleHeader.module.css'
 
 interface ModuleHeaderProps {
@@ -37,7 +39,20 @@ export function ModuleHeader({
     const hasPhases = phases && phases.length > 1
 
     return (
-        <div className={styles.header}>
+        <motion.div 
+            className={styles.header}
+            variants={{
+                initial: { opacity: 0, y: TRANSITION_CONFIG.header.yOffset },
+                animate: { opacity: 1, y: 0 }
+            }}
+            initial="initial"
+            animate="animate"
+            transition={{ 
+                duration: TRANSITION_CONFIG.header.duration, 
+                delay: TRANSITION_CONFIG.header.delay, 
+                ease: TRANSITION_CONFIG.header.ease 
+            }}
+        >
             {/* LEFT — back button */}
             <button
                 className={styles.backBtn}
@@ -72,6 +87,6 @@ export function ModuleHeader({
                     </div>
                 )}
             </div>
-        </div>
+        </motion.div>
     )
 }

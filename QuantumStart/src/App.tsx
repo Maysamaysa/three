@@ -18,14 +18,8 @@ import { MeasurementModule } from './pages/modules/measurement/MeasurementModule
 import { EntanglementModule } from './pages/modules/entanglement/EntanglementModule'
 import { GatesModule } from './pages/modules/gates/GatesModule'
 import { AlgorithmsModule } from './pages/modules/algorithms/AlgorithmsModule'
+import { TRANSITION_CONFIG } from './config/transitions'
 import './App.css'
-
-// Configuration for consistent transitions
-const TRANSITION = {
-  duration: 0.5,
-  ease: [0.22, 1, 0.36, 1],
-  y: 30
-}
 
 // ─── GLOBAL CAT CANVAS ────────────────────────────────────────────────────────
 // Fixed behind everything. Never unmounts on route changes.
@@ -95,15 +89,23 @@ function AppShell() {
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: TRANSITION.y }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -TRANSITION.y }}
-            transition={{ duration: TRANSITION.duration, ease: TRANSITION.ease }}
+            variants={{
+              initial: { opacity: 0, y: TRANSITION_CONFIG.page.yOffset },
+              animate: { opacity: 1, y: 0 },
+              exit: { opacity: 0, y: -TRANSITION_CONFIG.page.yOffset }
+            }}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ 
+                duration: TRANSITION_CONFIG.page.duration, 
+                ease: TRANSITION_CONFIG.page.ease 
+            }}
             style={{
               position: 'absolute',
               inset: 0,
               pointerEvents: 'none',
-              willChange: 'opacity, transform'
+              willChange: 'transform, opacity'
             }}
           >
             <Outlet />
