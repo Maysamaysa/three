@@ -1,11 +1,11 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { CatProvider, useCat } from './context/CatContext'
 import { ProgressProvider } from './context/ProgressContext'
 import QuantumCat from './models/quantum_cat'
 import ProceduralBackground from './models/procedural-background'
-import PageTransition from './components/PageTransition'
 import { Landing } from './pages/Landing'
 import { Learn } from './pages/Learn'
 import { Profile } from './pages/Profile'
@@ -19,6 +19,13 @@ import { EntanglementModule } from './pages/modules/entanglement/EntanglementMod
 import { GatesModule } from './pages/modules/gates/GatesModule'
 import { AlgorithmsModule } from './pages/modules/algorithms/AlgorithmsModule'
 import './App.css'
+
+// Configuration for consistent transitions
+const TRANSITION = {
+  duration: 0.5,
+  ease: [0.22, 1, 0.36, 1],
+  y: 30
+}
 
 // ─── GLOBAL CAT CANVAS ────────────────────────────────────────────────────────
 // Fixed behind everything. Never unmounts on route changes.
@@ -77,16 +84,42 @@ function CatCanvas() {
 
 // ─── APP SHELL ────────────────────────────────────────────────────────────────
 function AppShell() {
+  const location = useLocation()
   return (
     <>
       {/* Layer 0: persistent cat + starfield */}
       <CatCanvas />
 
-      {/* Layer 1: page content — pointer-events:none so clicks fall through to cat canvas.
-           Each page's interactive HTML elements set pointer-events:auto themselves. */}
+      {/* Layer 1: page content — pointer-events:none so clicks fall through to cat canvas. */}
       <div style={{ position: 'relative', zIndex: 1, width: '100vw', height: '100vh', overflow: 'hidden', pointerEvents: 'none' }}>
-        <PageTransition>
-          <Routes location={location} key={location.pathname}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: TRANSITION.y }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -TRANSITION.y }}
+            transition={{ duration: TRANSITION.duration, ease: TRANSITION.ease }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              willChange: 'opacity, transform'
+            }}
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <ProgressProvider>
+      <CatProvider>
+        <Routes>
+          <Route element={<AppShell />}>
             <Route path="/" element={<Landing />} />
             <Route path="/learn" element={<Learn />} />
             <Route path="/profile" element={<Profile />} />
@@ -99,18 +132,8 @@ function AppShell() {
             <Route path="/learn/algorithms" element={<AlgorithmsModule />} />
             <Route path="/playground" element={<Playground />} />
             <Route path="/tutorial/:id" element={<TutorialChallenge />} />
-          </Routes>
-        </PageTransition>
-      </div>
-    </>
-  )
-}
-
-function App() {
-  return (
-    <ProgressProvider>
-      <CatProvider>
-        <AppShell />
+          </Route>
+        </Routes>
       </CatProvider>
     </ProgressProvider>
   )

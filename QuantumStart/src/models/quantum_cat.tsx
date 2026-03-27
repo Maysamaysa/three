@@ -469,12 +469,12 @@ export default function QuantumCat({
 
         // Position lerp on outer posGroup (no scale applied here)
         posTarget.current.copy(SLOT[catPosition].pos)
-        posGroup.current.position.lerp(posTarget.current, delta * 3.5)
+        posGroup.current.position.lerp(posTarget.current, delta * 8.0)
 
         // Scale lerp on inner catGroup
         scaleTarget.current = SLOT[catPosition].scale
         const curScale = catGroup.current.scale.x
-        catGroup.current.scale.setScalar(curScale + (scaleTarget.current - curScale) * delta * 3.5)
+        catGroup.current.scale.setScalar(curScale + (scaleTarget.current - curScale) * delta * 8.0)
 
         // ── NPC: idle bob + mouse look ──
         if (mode === 'npc') {

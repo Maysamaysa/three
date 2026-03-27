@@ -571,7 +571,7 @@ export function Learn() {
         setMode('npc')
         setCatPosition('center')
         setCatQubit('idle')
-    })
+    }, [setMode, setCatPosition, setCatQubit])
 
     const selectedModule = MODULE_DATA.find(m => m.id === selectedId) ?? null
 
@@ -597,7 +597,7 @@ export function Learn() {
     const handleConfirm = () => {
         if (!selectedModule) return
         setConfirming(true)
-        setTimeout(() => navigate(selectedModule.route), 600)
+        navigate(selectedModule.route)
     }
 
     const handleDismiss = () => {

@@ -31,15 +31,13 @@ export function Landing() {
     const nextPhase = () => { setDialoguePhase(2); setHoveredChoice(null) }
 
     const handleBeginJourney = () => {
-        setCatPosition('corner')
         setMode('npc')
-        setTimeout(() => navigate('/learn'), 350)
+        navigate('/learn')
     }
 
     const handleGoToPlayground = () => {
-        setCatPosition('corner')
         setMode('npc')
-        setTimeout(() => navigate('/playground'), 350)
+        navigate('/playground')
     }
 
     return (

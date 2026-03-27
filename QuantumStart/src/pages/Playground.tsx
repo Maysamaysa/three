@@ -88,7 +88,6 @@ export function Playground() {
       <ModuleCanvas camera={ { position: [0, 2, 10], fov: 45 } }>
         <ambientLight intensity={ 1.5 } />
           < pointLight position = { [10, 10, 10]} intensity = { 1} color = "#5DA7DB" />
-            <ProceduralBackground />
             </ModuleCanvas>
             </div>
 
